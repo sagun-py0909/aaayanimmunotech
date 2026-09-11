@@ -13,9 +13,10 @@ import {
   Phone,
   Play,
   Plus,
-  Search,
-  ShieldCheck,
-  ShoppingBag,
+	  Search,
+	  ShieldCheck,
+	  SlidersHorizontal,
+	  ShoppingBag,
   Sparkles,
   X,
 } from "lucide-react";
@@ -110,18 +111,22 @@ function scrollToSection(id: string) {
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState("All equipment");
   const [query, setQuery] = useState("");
-  const [shortlist, setShortlist] = useState<string[]>([]);
-  const [enquiryOpen, setEnquiryOpen] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+	const [shortlist, setShortlist] = useState<string[]>([]);
+	const [enquiryOpen, setEnquiryOpen] = useState(false);
+	const [mobileOpen, setMobileOpen] = useState(false);
+	const [sortBy, setSortBy] = useState("featured");
 
   const filteredProducts = useMemo(() => {
     const normalisedQuery = query.trim().toLowerCase();
-    return products.filter((product) => {
-      const matchesCategory = activeCategory === "All equipment" || product.category === activeCategory;
-      const matchesQuery = !normalisedQuery || `${product.name} ${product.category} ${product.description}`.toLowerCase().includes(normalisedQuery);
-      return matchesCategory && matchesQuery;
-    });
-  }, [activeCategory, query]);
+	    const matchingProducts = products.filter((product) => {
+	      const matchesCategory = activeCategory === "All equipment" || product.category === activeCategory;
+	      const matchesQuery = !normalisedQuery || `${product.name} ${product.category} ${product.description}`.toLowerCase().includes(normalisedQuery);
+	      return matchesCategory && matchesQuery;
+	    });
+	    if (sortBy === "name") return [...matchingProducts].sort((a, b) => a.name.localeCompare(b.name));
+	    if (sortBy === "category") return [...matchingProducts].sort((a, b) => a.category.localeCompare(b.category));
+	    return matchingProducts;
+	  }, [activeCategory, query, sortBy]);
 
   const toggleShortlist = (id: string) => {
     setShortlist((current) => {
@@ -192,11 +197,23 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-auto grid max-w-[800px] grid-cols-1 gap-4 border-t border-white/20 pt-5 sm:grid-cols-3">
-              {trustItems.map(({ icon: Icon, value, label }) => <div key={value} className="flex items-center gap-3"><Icon size={17} className="text-[#d5c59d]" /><div><div className="text-[11px] uppercase tracking-[0.12em] text-white">{value}</div><div className="mt-1 text-[11px] text-white/50">{label}</div></div></div>)}
-            </div>
-          </div>
-          <button onClick={() => scrollToSection("catalogue")} className="absolute bottom-8 right-6 hidden items-center gap-2 text-[9px] uppercase tracking-[0.24em] text-white/55 lg:flex">Explore the collection <ArrowDown size={14} /></button>
+	            <div className="mt-auto grid max-w-[800px] grid-cols-1 gap-4 border-t border-white/20 pt-5 sm:grid-cols-3">
+	              {trustItems.map(({ icon: Icon, value, label }) => <div key={value} className="flex items-center gap-3"><Icon size={17} className="text-[#d5c59d]" /><div><div className="text-[11px] uppercase tracking-[0.12em] text-white">{value}</div><div className="mt-1 text-[11px] text-white/50">{label}</div></div></div>)}
+	            </div>
+	          </div>
+	          <div className="absolute bottom-24 right-6 hidden w-[390px] gap-3 xl:flex 2xl:right-16">
+	            <button onClick={() => openEnquiry("Aether HBOT 3.0")} className="group relative h-[300px] flex-1 overflow-hidden border border-white/20 bg-[#272724] text-left shadow-2xl shadow-black/30">
+	              <img src="/manus-storage/hyperbaric-room_f8b7624d.webp" alt="Aether HBOT 3.0" className="absolute inset-0 h-full w-full object-cover opacity-75 transition duration-500 group-hover:scale-105 group-hover:opacity-90" />
+	              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+	              <div className="absolute inset-x-4 bottom-4"><div className="text-[9px] uppercase tracking-[0.2em] text-[#d5c59d]">01 / Featured system</div><div className="mt-2 font-serif text-2xl text-white">Aether HBOT 3.0</div><div className="mt-2 flex items-center justify-between text-[9px] uppercase tracking-[0.14em] text-white/60"><span>Up to 3 ATA</span><ArrowRight size={13} className="transition group-hover:translate-x-1" /></div></div>
+	            </button>
+	            <button onClick={() => openEnquiry("NØRDIK Chamber")} className="group relative mt-10 h-[260px] w-[145px] overflow-hidden border border-white/20 bg-[#314341] text-left shadow-2xl shadow-black/30">
+	              <img src="/manus-storage/cryotherapy-gym_647bf934.jpg" alt="NØRDIK Chamber" className="absolute inset-0 h-full w-full object-cover opacity-70 transition duration-500 group-hover:scale-105 group-hover:opacity-90" />
+	              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+	              <div className="absolute inset-x-3 bottom-3"><div className="text-[9px] uppercase tracking-[0.16em] text-[#d5c59d]">02 / New</div><div className="mt-2 font-serif text-xl leading-none text-white">NØRDIK</div><div className="mt-2 flex items-center justify-between text-[9px] uppercase tracking-[0.12em] text-white/60"><span>Cryo</span><ArrowRight size={12} /></div></div>
+	            </button>
+	          </div>
+	          <button onClick={() => scrollToSection("catalogue")} className="absolute bottom-8 right-6 hidden items-center gap-2 text-[9px] uppercase tracking-[0.24em] text-white/55 lg:flex">Explore the collection <ArrowDown size={14} /></button>
         </section>
 
         <section id="catalogue" className="scroll-mt-20 bg-[#f4f1ea] px-5 py-20 lg:px-16 lg:py-28">
@@ -210,13 +227,19 @@ export default function Home() {
               <div className="flex items-center gap-2 border-b border-[#1d1d1b]/20 pb-2 text-sm text-[#5f5b53] lg:w-[270px]"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search equipment" className="w-full bg-transparent outline-none placeholder:text-[#8c887f]" /></div>
             </div>
 
-            <div className="mt-7 flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-              {categories.map((category) => <button key={category} onClick={() => setActiveCategory(category)} className={`whitespace-nowrap rounded-full border px-4 py-2 text-[10px] uppercase tracking-[0.14em] transition ${activeCategory === category ? "border-[#24231f] bg-[#24231f] text-white" : "border-[#1d1d1b]/15 text-[#6f6a61] hover:border-[#24231f] hover:text-[#24231f]"}`}>{category}</button>)}
+	            <div className="mt-10 grid gap-10 lg:grid-cols-[220px_1fr] lg:items-start">
+	              <aside className="lg:sticky lg:top-28">
+	                <div className="flex items-center justify-between border-b border-[#1d1d1b]/15 pb-4"><div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[#24231f]"><SlidersHorizontal size={14} /> Refine</div><button onClick={() => { setQuery(""); setActiveCategory("All equipment"); setSortBy("featured"); }} className="text-[9px] uppercase tracking-[0.14em] text-[#9d8251]">Reset</button></div>
+                <div className="border-b border-[#1d1d1b]/15 py-5"><div className="mb-3 text-[9px] uppercase tracking-[0.18em] text-[#8a7657]">Modality</div><div className="space-y-2">{categories.map((category) => <button key={category} onClick={() => setActiveCategory(category)} className={`flex w-full items-center justify-between py-1 text-left text-xs transition ${activeCategory === category ? "text-[#9d8251]" : "text-[#6f6a61] hover:text-[#24231f]"}`}><span>{category}</span><span className={`h-1.5 w-1.5 rounded-full ${activeCategory === category ? "bg-[#9d8251]" : "bg-[#c9c1b5]"}`} /></button>)}</div></div>
+                <div className="py-5"><label htmlFor="sort-products" className="mb-3 block text-[9px] uppercase tracking-[0.18em] text-[#8a7657]">Sort by</label><div className="relative"><ArrowDown size={13} className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-[#9d8251]" /><select id="sort-products" value={sortBy} onChange={(event) => setSortBy(event.target.value)} className="w-full appearance-none border-b border-[#1d1d1b]/15 bg-transparent py-2 pr-5 text-xs text-[#4f4b43] outline-none"><option value="featured">Featured</option><option value="name">Name A–Z</option><option value="category">Modality</option></select></div></div>
+              </aside>
+              <div>
+                <div className="mb-5 flex items-center justify-between text-[10px] uppercase tracking-[0.14em] text-[#8a7657]"><span>{filteredProducts.length} systems available</span><span className="hidden sm:inline">Select up to three to compare</span></div>
+                {filteredProducts.length === 0 ? <div className="py-24 text-center text-[#6f6a61]">No systems match that search. Try another category or <button className="underline" onClick={() => { setQuery(""); setActiveCategory("All equipment"); }}>reset the collection</button>.</div> : <div className="grid gap-x-5 gap-y-14 md:grid-cols-2 xl:grid-cols-3">
+                  {filteredProducts.map((product, index) => <ProductCard key={product.id} product={product} index={index} isShortlisted={shortlist.includes(product.id)} onCompare={() => toggleShortlist(product.id)} onEnquire={() => openEnquiry(product.name)} />)}
+                </div>}
+              </div>
             </div>
-
-            {filteredProducts.length === 0 ? <div className="py-24 text-center text-[#6f6a61]">No systems match that search. Try another category or <button className="underline" onClick={() => { setQuery(""); setActiveCategory("All equipment"); }}>reset the collection</button>.</div> : <div className="mt-10 grid gap-x-5 gap-y-14 md:grid-cols-2 xl:grid-cols-3">
-              {filteredProducts.map((product, index) => <ProductCard key={product.id} product={product} index={index} isShortlisted={shortlist.includes(product.id)} onCompare={() => toggleShortlist(product.id)} onEnquire={() => openEnquiry(product.name)} />)}
-            </div>}
           </div>
         </section>
 

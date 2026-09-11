@@ -20,6 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Link } from "wouter";
 
 type Product = {
   id: string;
@@ -151,9 +152,10 @@ export default function Home() {
           </a>
 
           <nav className="hidden items-center gap-7 text-[10px] uppercase tracking-[0.2em] text-white/65 lg:flex" aria-label="Primary">
-            {[{ label: "Shop equipment", id: "catalogue" }, { label: "Solutions", id: "solutions" }, { label: "Science", id: "science" }, { label: "Support", id: "support" }].map((item) => (
-              <button key={item.id} onClick={() => scrollToSection(item.id)} className="transition-colors hover:text-white">{item.label}</button>
-            ))}
+            <Link href="/products" className="transition-colors hover:text-white">Shop equipment</Link>
+            <Link href="/sectors" className="transition-colors hover:text-white">Sectors</Link>
+            <Link href="/blogs" className="transition-colors hover:text-white">Science & journal</Link>
+            <Link href="/support" className="transition-colors hover:text-white">Support</Link>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -164,9 +166,10 @@ export default function Home() {
         {mobileOpen && (
           <div className="border-t border-white/10 bg-[#161615] px-5 py-4 lg:hidden">
             <div className="flex flex-col gap-4 text-[10px] uppercase tracking-[0.2em] text-white/65">
-              {[{ label: "Shop equipment", id: "catalogue" }, { label: "Solutions", id: "solutions" }, { label: "Science", id: "science" }, { label: "Support", id: "support" }].map((item) => (
-                <button key={item.id} className="text-left" onClick={() => { setMobileOpen(false); scrollToSection(item.id); }}>{item.label}</button>
-              ))}
+              <Link href="/products" onClick={() => setMobileOpen(false)} className="text-left">Shop equipment</Link>
+              <Link href="/sectors" onClick={() => setMobileOpen(false)} className="text-left">Sectors</Link>
+              <Link href="/blogs" onClick={() => setMobileOpen(false)} className="text-left">Science & journal</Link>
+              <Link href="/support" onClick={() => setMobileOpen(false)} className="text-left">Support</Link>
               <button onClick={() => { setMobileOpen(false); openEnquiry(); }} className="w-fit border border-[#d5c59d]/70 px-4 py-2.5 text-[#f4e8c7]">Request a quote</button>
             </div>
           </div>

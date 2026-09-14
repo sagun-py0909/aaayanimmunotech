@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { ArrowRight, Check, CircleHelp, MessageCircle, Phone, ShoppingBag, Sparkles, X } from "lucide-react";
 import { toast } from "sonner";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { GalleryCarousel, HeroCarousel } from "@/components/PhotoCarousels";
 import { ProductCard, SiteFooter, SiteHeader, StatsStrip, pad } from "@/components/SiteChrome";
 import { catalogue, contact, guideGroups, guideLabels, guides, sectors } from "@/data/site";
@@ -15,11 +15,8 @@ const modalities = [
 
 const featuredProducts = catalogue.slice(0, 6);
 
-function scrollToSection(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
 export default function Home() {
+  const [, navigate] = useLocation();
   const [shortlist, setShortlist] = useState<string[]>([]);
   const [enquiryOpen, setEnquiryOpen] = useState(false);
 
@@ -33,7 +30,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#f4f1ea] text-[#133E2F] selection:bg-[#bca477] selection:text-[#133E2F]">
       <SiteHeader />
       <main id="top">
-        <HeroCarousel onExplore={() => scrollToSection("catalogue")} onEnquire={() => setEnquiryOpen(true)} />
+        <HeroCarousel onExplore={() => navigate("/products")} onEnquire={() => setEnquiryOpen(true)} />
 
         <StatsStrip />
 

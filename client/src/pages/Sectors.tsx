@@ -42,19 +42,24 @@ export function SectorDetail() {
     <SiteHeader />
     <main>
       <section className="relative overflow-hidden bg-[#132F4F] pt-24 text-[#f9f7f1]">
-        <img src={sector.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-60" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,28,51,.95)_0%,rgba(10,28,51,.72)_45%,rgba(10,28,51,.15)_100%)]" />
-        <div className="relative mx-auto flex min-h-[640px] max-w-[1440px] flex-col justify-end px-5 pb-16 lg:px-16">
+        <div className="relative mx-auto grid min-h-[640px] max-w-[1440px] items-end gap-12 px-5 pb-16 pt-8 lg:grid-cols-[1.1fr_.9fr] lg:px-16">
+          <div>
           <nav aria-label="Breadcrumb" className="mb-10 flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-white/55"><Link href="/" className="hover:text-white">Home</Link><span>/</span><Link href="/sectors" className="hover:text-white">Sectors</Link><span>/</span><span className="text-[#C5A059]">{sector.title}</span></nav>
           <div className="max-w-[780px]">
             <div className="mb-6 flex items-center gap-3 text-[10px] uppercase tracking-[0.32em] text-[#d7c79e]"><span className="h-px w-10 bg-[#d7c79e]" /> {pad(sectorIndex)} / {sector.heroTag}</div>
-            <Html as="h1" html={sector.headingHtml} className="font-serif text-[clamp(3.2rem,7vw,7rem)] leading-[.88] tracking-[-0.045em] [&_em]:font-light [&_em]:text-[#d6c6a1]" />
+            <Html as="h1" html={sector.headingHtml} className="font-serif text-[clamp(3rem,5.6vw,6rem)] leading-[.88] tracking-[-0.045em] [&_em]:font-light [&_em]:text-[#d6c6a1]" />
             <p className="mt-6 font-serif text-2xl italic text-[#d6c6a1]">{sector.subtitle}</p>
             <p className="mt-6 max-w-[580px] text-[15px] leading-7 text-white/70">{sector.description}</p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Link href="/contact" className="group inline-flex items-center gap-3 bg-[#C5A059] px-5 py-3.5 text-[10px] uppercase tracking-[0.18em] text-[#132F4F] transition hover:bg-[#f4e9cc]">Request a quotation <ArrowRight size={14} className="transition group-hover:translate-x-1" /></Link>
               <a href="#specs" className="inline-flex items-center gap-3 border border-white/35 px-5 py-3.5 text-[10px] uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white/10">Equipment & specifications</a>
             </div>
+          </div>
+          </div>
+          <div className="relative aspect-[4/5] overflow-hidden bg-[#1A3B63] sm:aspect-[4/3] lg:aspect-square">
+            <img src={sector.image} alt={sector.title} className="h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A1C33]/45 via-transparent to-transparent" />
+            <div className="absolute bottom-5 left-5 rounded-full bg-[#f4f1ea]/90 px-3 py-1.5 text-[9px] uppercase tracking-[0.18em] text-[#514b42]">{sector.label}</div>
           </div>
         </div>
       </section>

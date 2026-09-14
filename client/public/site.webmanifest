@@ -1,0 +1,19 @@
+{
+  "name": "AAAyan Immunotech — Wellness Equipment Supply & Installation",
+  "short_name": "AAAyan",
+  "description": "Supplier and turnkey installer of hyperbaric oxygen chambers, cryotherapy chambers and red light therapy systems.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F4F1EA",
+  "theme_color": "#171716",
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/images/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="ringGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0284c7" />
+            <stop offset="50%" stop-color="#0369a1" />
+            <stop offset="100%" stop-color="#0c4a6e" />
+        </linearGradient>
+    </defs>
+    <circle cx="50" cy="50" r="48" fill="none" stroke="url(#ringGradLight)" stroke-width="0.75" opacity="0.8"/>
+    <circle cx="50" cy="50" r="38" fill="none" stroke="url(#ringGradLight)" stroke-width="1.5"/>
+    <polygon points="50,12 88,50 50,88 12,50" fill="none" stroke="#0284c7" stroke-width="1" opacity="0.6"/>
+    <line x1="50" y1="28" x2="50" y2="75" stroke="#0369a1" stroke-width="2"/>
+    <circle cx="50" cy="22" r="5" fill="#0f172a"/>
+    <path d="M 33,40 Q 50,25 67,40" fill="none" stroke="#0284c7" stroke-width="1.5" opacity="0.8"/>
+    <path d="M 30,52 Q 50,42 70,52" fill="none" stroke="#0c4a6e" stroke-width="2"/>
+    <path d="M 35,64 Q 50,56 65,64" fill="none" stroke="#0369a1" stroke-width="1" opacity="0.6"/>
+</svg>

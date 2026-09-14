@@ -8,7 +8,7 @@ const photo = (name: string) => `/images/photos/${name}.webp`;
 
 // Real equipment photography (1164–1600px) — large enough for a full-bleed hero.
 const heroSlides = [
-  { image: photo("hbot-chamber-residence"), alt: "Hard shell hyperbaric oxygen chamber installed in a private residence", eyebrow: "Hyperbaric oxygen", title: "Hard shell HBOT chambers", href: "/equipment/hyperbaric-oxygen-chambers" },
+  { image: photo("hbot-chamber-residence"), alt: "Hard shell hyperbaric oxygen chamber installed in a private residence", eyebrow: "Hyperbaric oxygen", title: "Hard shell HBOT chambers", href: "/equipment/hyperbaric-oxygen-chambers", flip: true },
   { image: photo("red-light-panel"), alt: "Full body red light therapy panel in use", eyebrow: "Photobiomodulation", title: "Full body red light therapy", href: "/equipment/red-light-therapy" },
   { image: photo("hbot-multiplace-interior"), alt: "Seating inside a walk-in multiplace hyperbaric chamber", eyebrow: "Multiplace HBOT", title: "Walk-in chambers for group sessions", href: "/equipment/hyperbaric-oxygen-chambers" },
   { image: photo("red-light-bed"), alt: "Commercial red light therapy bed with the canopy open", eyebrow: "Red light therapy beds", title: "Commercial PBM beds", href: "/equipment/red-light-therapy" },
@@ -57,13 +57,13 @@ export function HeroCarousel({ onExplore, onEnquire }: { onExplore: () => void; 
   return <section className="relative h-[92vh] min-h-[640px] max-h-[980px] overflow-hidden bg-[#191918] text-[#f9f7f1]" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} aria-roledescription="carousel" aria-label="Featured equipment">
     <div ref={viewportRef} className="absolute inset-0 overflow-hidden">
       <div className="flex h-full">
-        {heroSlides.map((item, index) => <div key={item.image} className="relative h-full min-w-0 flex-[0_0_100%] overflow-hidden" aria-roledescription="slide" aria-label={`${index + 1} of ${heroSlides.length}`}>
+        {heroSlides.map((item, index) => <div key={item.image} className={`relative h-full min-w-0 flex-[0_0_100%] overflow-hidden ${"flip" in item && item.flip ? "-scale-x-100" : ""}`} aria-roledescription="slide" aria-label={`${index + 1} of ${heroSlides.length}`}>
           <img src={item.image} alt={item.alt} loading={index === 0 ? "eager" : "lazy"} className={`h-full w-full object-cover transition-transform duration-[7000ms] ease-out ${index === selected ? "scale-110" : "scale-100"}`} />
         </div>)}
       </div>
     </div>
-    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(13,13,12,.88)_0%,rgba(13,13,12,.5)_45%,rgba(13,13,12,.08)_100%)]" />
-    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,rgba(13,13,12,.85)_0%,transparent_42%)]" />
+    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(13,13,12,.6)_0%,rgba(13,13,12,.25)_45%,rgba(13,13,12,0)_100%)]" />
+    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,rgba(13,13,12,.6)_0%,transparent_42%)]" />
 
     <div className="pointer-events-none relative mx-auto flex h-full max-w-[1440px] flex-col justify-between px-5 pb-8 pt-32 lg:px-16 lg:pb-10">
       <div className="pointer-events-auto max-w-[640px]">

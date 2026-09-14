@@ -32,9 +32,9 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-[#0F2440]/95 text-[#f8f5ee] backdrop-blur-xl">
     <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-4 lg:px-10">
-      <Link href="/" className="flex items-center gap-3" aria-label="AAAyan Immunotech home">
-        <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#b7a77e]/60 text-[10px] tracking-[0.24em] text-[#d4c39b]">AA</span>
-        <span className="leading-none"><span className="block font-serif text-[18px] tracking-[0.16em]">AAAYAN</span><span className="mt-1 block text-[8px] uppercase tracking-[0.36em] text-white/55">Immunotech</span></span>
+      <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="AAAyan Immunotech home">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#b7a77e]/60 text-[10px] tracking-[0.24em] text-[#d4c39b]">AA</span>
+        <span className="whitespace-nowrap font-serif text-[14px] leading-none tracking-[0.1em] sm:text-[18px] sm:tracking-[0.14em] lg:text-[14px] lg:tracking-[0.1em] xl:text-[18px] xl:tracking-[0.14em]">AAAYAN IMMUNOTECH</span>
       </Link>
       <nav className="hidden items-center gap-7 text-[10px] uppercase tracking-[0.2em] text-white/65 lg:flex" aria-label="Primary">
         {navLinks.map((link) => link.menu ? <div key={link.href} className="group relative">
@@ -80,8 +80,8 @@ export function SiteFooter() {
       <div className="mx-auto max-w-[1440px]">
         <div className="grid gap-12 border-b border-white/10 pb-12 lg:grid-cols-[1fr_1fr] lg:items-end">
           <div>
-            <Link href="/" className="font-serif text-3xl tracking-[0.16em]">AAAYAN</Link>
-            <div className="mt-2 text-[9px] uppercase tracking-[0.3em] text-white/45">Immunotech · Recovery, performance & longevity</div>
+            <Link href="/" className="whitespace-nowrap font-serif text-[clamp(1.125rem,5.5vw,1.875rem)] tracking-[0.12em]">AAAYAN IMMUNOTECH</Link>
+            <div className="mt-2 text-[9px] uppercase tracking-[0.3em] text-white/45">Recovery, performance & longevity</div>
             <p className="mt-6 max-w-[440px] text-sm leading-7 text-white/55">Wellness equipment supplier in India — specifying, installing and servicing hyperbaric oxygen, cryotherapy and photobiomodulation systems for environments that refuse to compromise.</p>
           </div>
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between lg:justify-end lg:gap-16">

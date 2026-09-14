@@ -1,10 +1,10 @@
-import { useMemo, useState, type FormEvent } from "react";
-import { ArrowDown, ArrowRight, Check, CircleHelp, MessageCircle, Phone, Search, ShoppingBag, SlidersHorizontal, Sparkles, X } from "lucide-react";
+import { useState, type FormEvent } from "react";
+import { ArrowRight, Check, CircleHelp, MessageCircle, Phone, ShoppingBag, Sparkles, X } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
 import { GalleryCarousel, HeroCarousel } from "@/components/PhotoCarousels";
 import { ProductCard, SiteFooter, SiteHeader, StatsStrip, pad } from "@/components/SiteChrome";
-import { catalogue, categories, categoryNames, contact, guideGroups, guideLabels, guides, sectors } from "@/data/site";
+import { catalogue, contact, guideGroups, guideLabels, guides, sectors } from "@/data/site";
 
 const modalities = [
   { href: "/equipment/hyperbaric-oxygen-chambers", title: "Hyperbaric oxygen chambers", body: "hard shell monoplace and multiplace HBOT chambers up to 3 ATA." },
@@ -13,39 +13,20 @@ const modalities = [
   { href: "/equipment/cold-plunge", title: "Commercial cold plunge and compression therapy", body: "the stations that complete a circuit." },
 ];
 
+const featuredProducts = catalogue.slice(0, 6);
+
 function scrollToSection(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 export default function Home() {
-  const [activeCategory, setActiveCategory] = useState("All equipment");
-  const [query, setQuery] = useState("");
   const [shortlist, setShortlist] = useState<string[]>([]);
   const [enquiryOpen, setEnquiryOpen] = useState(false);
-  const [sortBy, setSortBy] = useState("featured");
-
-  const filteredProducts = useMemo(() => {
-    const normalisedQuery = query.trim().toLowerCase();
-    const matching = catalogue.filter((product) => {
-      const matchesCategory = activeCategory === "All equipment" || product.category === activeCategory;
-      const matchesQuery = !normalisedQuery || `${product.name} ${product.type} ${product.category} ${product.description}`.toLowerCase().includes(normalisedQuery);
-      return matchesCategory && matchesQuery;
-    });
-    if (sortBy === "name") return [...matching].sort((a, b) => a.name.localeCompare(b.name));
-    if (sortBy === "category") return [...matching].sort((a, b) => a.category.localeCompare(b.category));
-    return matching;
-  }, [activeCategory, query, sortBy]);
 
   const toggleShortlist = (id: string) => {
     const exists = shortlist.includes(id);
     setShortlist(exists ? shortlist.filter((item) => item !== id) : shortlist.length >= 3 ? [...shortlist.slice(1), id] : [...shortlist, id]);
     toast(exists ? "Removed from shortlist" : "Added to shortlist", { description: exists ? "The system is no longer in your shortlist." : "Shortlist up to three systems for a focused quotation." });
-  };
-
-  const resetFilters = () => {
-    setQuery("");
-    setActiveCategory("All equipment");
-    setSortBy("featured");
   };
 
   return (
@@ -56,40 +37,12 @@ export default function Home() {
 
         <StatsStrip />
 
-        <section id="catalogue" className="scroll-mt-20 bg-[#f4f1ea] px-5 py-20 lg:px-16 lg:py-28">
-          <div className="mx-auto max-w-[1440px]">
-            <div className="flex flex-col justify-between gap-8 border-b border-[#132F4F]/15 pb-9 lg:flex-row lg:items-end">
-              <div>
-                <div className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#8a7657]">The collection / 01</div>
-                <h2 className="max-w-[660px] font-serif text-[clamp(2.8rem,5vw,5.5rem)] leading-[.92] tracking-[-0.04em]">Built for <em className="font-light">better</em> recovery.</h2>
-                <p className="mt-5 max-w-[540px] text-sm leading-6 text-[#5f5b53]">Hyperbaric chambers, cryotherapy chambers and photobiomodulation beds that anchor a complete recovery environment. Filter by modality, shortlist up to three, and request a quotation.</p>
-              </div>
-              <div className="flex items-center gap-2 border-b border-[#132F4F]/20 pb-2 text-sm text-[#5f5b53] lg:w-[270px]"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search equipment" aria-label="Search equipment" className="w-full bg-transparent outline-none placeholder:text-[#8c887f]" /></div>
-            </div>
-
-            <div className="mt-10 grid gap-10 lg:grid-cols-[220px_1fr] lg:items-start">
-              <aside className="lg:sticky lg:top-28">
-                <div className="flex items-center justify-between border-b border-[#132F4F]/15 pb-4"><div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[#132F4F]"><SlidersHorizontal size={14} /> Refine</div><button onClick={resetFilters} className="text-[9px] uppercase tracking-[0.14em] text-[#C5A059]">Reset</button></div>
-                <div className="border-b border-[#132F4F]/15 py-5"><div className="mb-3 text-[9px] uppercase tracking-[0.18em] text-[#8a7657]">Modality</div><div className="space-y-2">{categoryNames.map((category) => <button key={category} onClick={() => setActiveCategory(category)} className={`flex w-full items-center justify-between py-1 text-left text-xs transition ${activeCategory === category ? "text-[#C5A059]" : "text-[#6f6a61] hover:text-[#132F4F]"}`}><span>{category}</span><span className={`h-1.5 w-1.5 rounded-full ${activeCategory === category ? "bg-[#C5A059]" : "bg-[#c9c1b5]"}`} /></button>)}</div></div>
-                <div className="border-b border-[#132F4F]/15 py-5"><label htmlFor="sort-products" className="mb-3 block text-[9px] uppercase tracking-[0.18em] text-[#8a7657]">Sort by</label><div className="relative"><ArrowDown size={13} className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-[#C5A059]" /><select id="sort-products" value={sortBy} onChange={(event) => setSortBy(event.target.value)} className="w-full appearance-none border-b border-[#132F4F]/15 bg-transparent py-2 pr-5 text-xs text-[#4f4b43] outline-none"><option value="featured">Featured</option><option value="name">Name A–Z</option><option value="category">Modality</option></select></div></div>
-                <div className="py-5"><div className="mb-3 text-[9px] uppercase tracking-[0.18em] text-[#8a7657]">Price & supply guides</div><ul className="space-y-2 text-xs text-[#6f6a61]">{categories.map((category) => <li key={category.slug}><Link href={`/equipment/${category.slug}`} className="transition hover:text-[#132F4F]">{category.label}</Link></li>)}</ul></div>
-              </aside>
-              <div>
-                <div className="mb-5 flex items-center justify-between text-[10px] uppercase tracking-[0.14em] text-[#8a7657]"><span>{filteredProducts.length} systems available</span><Link href="/products" className="hidden sm:inline">Open full product range →</Link></div>
-                {filteredProducts.length === 0 ? <div className="py-24 text-center text-[#6f6a61]">No systems match that search. Try another modality or <button className="underline" onClick={resetFilters}>reset the collection</button>.</div> : <div className="grid gap-x-5 gap-y-14 md:grid-cols-2 xl:grid-cols-3">
-                  {filteredProducts.map((product, index) => <ProductCard key={product.id} product={product} index={index} selected={shortlist.includes(product.id)} onToggle={() => toggleShortlist(product.id)} />)}
-                </div>}
-              </div>
-            </div>
-          </div>
-        </section>
-
         <GalleryCarousel />
 
         <section id="sectors" className="scroll-mt-20 bg-[#132F4F] px-5 py-20 text-[#f6f1e8] lg:px-16 lg:py-28">
           <div className="mx-auto max-w-[1440px]">
             <div className="grid gap-12 lg:grid-cols-[.82fr_1.18fr] lg:items-end">
-              <div><div className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#C5A059]">Sectors / 02</div><h2 className="font-serif text-[clamp(2.8rem,5vw,5.5rem)] leading-[.9] tracking-[-0.04em]">One standard.<br /><em className="font-light text-[#C5A059]">Five environments.</em></h2></div>
+              <div><div className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#C5A059]">Sectors / 01</div><h2 className="font-serif text-[clamp(2.8rem,5vw,5.5rem)] leading-[.9] tracking-[-0.04em]">One standard.<br /><em className="font-light text-[#C5A059]">Five environments.</em></h2></div>
               <p className="max-w-[540px] text-sm leading-7 text-white/55 lg:justify-self-end">From a hospital HBOT unit to a hotel spa, a squad recovery room or a private residence — we specify the right equipment, footprint and support model for the space you are building.</p>
             </div>
             <div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-6">
@@ -99,6 +52,20 @@ export default function Home() {
                 <div className="absolute inset-x-5 bottom-5"><div className="text-[10px] uppercase tracking-[0.16em] text-[#C5A059]">{pad(index)} / {sector.label}</div><h3 className="mt-2 font-serif text-3xl">{sector.title}</h3><p className="mt-2 max-w-[340px] text-xs leading-5 text-white/65">{sector.subtitle}</p><span className="mt-4 inline-flex items-center gap-2 text-[9px] uppercase tracking-[0.18em] text-white/75">Explore sector <ArrowRight size={13} className="transition group-hover:translate-x-1" /></span></div>
               </Link>)}
             </div>
+          </div>
+        </section>
+
+        <section id="catalogue" className="scroll-mt-20 bg-[#f4f1ea] px-5 py-20 lg:px-16 lg:py-28">
+          <div className="mx-auto max-w-[1440px]">
+            <div className="border-b border-[#132F4F]/15 pb-9">
+              <div className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#8a7657]">The collection / 02</div>
+              <h2 className="max-w-[660px] font-serif text-[clamp(2.8rem,5vw,5.5rem)] leading-[.92] tracking-[-0.04em]">Built for <em className="font-light">better</em> recovery.</h2>
+              <p className="mt-5 max-w-[540px] text-sm leading-6 text-[#5f5b53]">Hyperbaric chambers, cryotherapy chambers and photobiomodulation beds that anchor a complete recovery environment. Shortlist up to three and request a quotation.</p>
+            </div>
+            <div className="mt-12 grid gap-x-5 gap-y-14 md:grid-cols-2 xl:grid-cols-3">
+              {featuredProducts.map((product, index) => <ProductCard key={product.id} product={product} index={index} selected={shortlist.includes(product.id)} onToggle={() => toggleShortlist(product.id)} />)}
+            </div>
+            <div className="mt-16 flex justify-center"><Link href="/products" className="inline-flex items-center gap-3 bg-[#132F4F] px-6 py-4 text-[10px] uppercase tracking-[0.18em] text-white transition hover:bg-[#C5A059]">Explore the full range <ArrowRight size={14} /></Link></div>
           </div>
         </section>
 

@@ -1,15 +1,10 @@
 import { useMemo, useState, type FormEvent } from "react";
-import { ArrowDown, ArrowRight, Check, CircleHelp, Headphones, MessageCircle, PackageCheck, Phone, Search, ShieldCheck, ShoppingBag, SlidersHorizontal, Sparkles, X } from "lucide-react";
+import { ArrowDown, ArrowRight, Check, CircleHelp, MessageCircle, Phone, Search, ShoppingBag, SlidersHorizontal, Sparkles, X } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
+import { GalleryCarousel, HeroCarousel } from "@/components/PhotoCarousels";
 import { ProductCard, SiteFooter, SiteHeader, StatsStrip, pad } from "@/components/SiteChrome";
 import { catalogue, categories, categoryNames, contact, guideGroups, guideLabels, guides, sectors } from "@/data/site";
-
-const trustItems = [
-  { icon: ShieldCheck, value: "Hard shell HBOT", label: "aviation-grade chambers" },
-  { icon: PackageCheck, value: "Surveyed first", label: "commissioned by our own engineers" },
-  { icon: Headphones, value: "Hyderabad HQ", label: "supply and service across India" },
-];
 
 const modalities = [
   { href: "/equipment/hyperbaric-oxygen-chambers", title: "Hyperbaric oxygen chambers", body: "hard shell monoplace and multiplace HBOT chambers up to 3 ATA." },
@@ -53,45 +48,11 @@ export default function Home() {
     setSortBy("featured");
   };
 
-  const [flagship, featured] = catalogue;
-
   return (
     <div className="min-h-screen bg-[#f4f1ea] text-[#191918] selection:bg-[#bca477] selection:text-[#171717]">
       <SiteHeader />
       <main id="top">
-        <section className="relative min-h-[760px] overflow-hidden bg-[#191918] pt-24 text-[#f9f7f1] lg:min-h-[820px]">
-          <img src="/manus-storage/hyperbaric-room_f8b7624d.webp" alt="" onError={(event) => { event.currentTarget.style.display = "none"; }} className="absolute inset-0 h-full w-full object-cover opacity-75" />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,13,12,.95)_0%,rgba(13,13,12,.7)_42%,rgba(13,13,12,.12)_90%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(13,13,12,.84)_0%,transparent_36%)]" />
-          <div className="relative mx-auto flex min-h-[680px] max-w-[1440px] flex-col justify-center px-5 pb-20 lg:px-16">
-            <div className="max-w-[660px]">
-              <div className="mb-6 flex items-center gap-3 text-[10px] uppercase tracking-[0.32em] text-[#d7c79e]"><span className="h-px w-10 bg-[#d7c79e]" /> Recovery · Performance · Longevity</div>
-              <h1 className="max-w-[720px] font-serif text-[clamp(3.2rem,7vw,7.5rem)] leading-[.88] tracking-[-0.045em]">Recovery equipment, <em className="font-light text-[#d6c6a1]">elevated.</em></h1>
-              <p className="mt-8 max-w-[520px] text-[15px] leading-7 text-white/75 lg:text-[17px]">Clinical-grade hyperbaric oxygen, cryotherapy and photobiomodulation systems — the infrastructure behind longevity, performance and recovery programmes.</p>
-              <p className="mt-4 max-w-[520px] text-sm leading-6 text-white/55">Wellness equipment supplier in India. Specified, installed and serviced for clinics, sports facilities, hotels, corporate campuses and private residences.</p>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <button onClick={() => scrollToSection("catalogue")} className="group inline-flex items-center gap-3 bg-[#d5c59d] px-5 py-3.5 text-[10px] uppercase tracking-[0.18em] text-[#1c1b18] transition hover:bg-[#f4e9cc]">Explore systems <ArrowRight size={14} className="transition group-hover:translate-x-1" /></button>
-                <button onClick={() => setEnquiryOpen(true)} className="inline-flex items-center gap-3 border border-white/35 px-5 py-3.5 text-[10px] uppercase tracking-[0.18em] text-white transition hover:border-white hover:bg-white/10">Talk to a specialist</button>
-              </div>
-            </div>
-            <div className="mt-auto grid max-w-[820px] grid-cols-1 gap-4 border-t border-white/20 pt-5 sm:grid-cols-3">
-              {trustItems.map(({ icon: Icon, value, label }) => <div key={value} className="flex items-center gap-3"><Icon size={17} className="text-[#d5c59d]" /><div><div className="text-[11px] uppercase tracking-[0.12em] text-white">{value}</div><div className="mt-1 text-[11px] text-white/50">{label}</div></div></div>)}
-            </div>
-          </div>
-          <div className="absolute bottom-24 right-6 hidden w-[400px] gap-3 xl:flex 2xl:right-16">
-            <Link href={`/products/${flagship.id}`} className="group relative h-[300px] flex-1 overflow-hidden border border-white/20 bg-[#272724] text-left shadow-2xl shadow-black/30">
-              <img src={flagship.image} alt={flagship.name} className="absolute inset-0 h-full w-full object-cover opacity-85 transition duration-500 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-              <div className="absolute inset-x-4 bottom-4"><div className="text-[9px] uppercase tracking-[0.2em] text-[#d5c59d]">01 / Flagship system</div><div className="mt-2 font-serif text-2xl text-white">{flagship.name}</div><div className="mt-2 flex items-center justify-between text-[9px] uppercase tracking-[0.14em] text-white/60"><span>{flagship.headline}</span><ArrowRight size={13} className="transition group-hover:translate-x-1" /></div></div>
-            </Link>
-            <Link href={`/products/${featured.id}`} className="group relative mt-10 h-[260px] w-[150px] overflow-hidden border border-white/20 bg-[#314341] text-left shadow-2xl shadow-black/30">
-              <img src={featured.image} alt={featured.name} className="absolute inset-0 h-full w-full object-cover opacity-85 transition duration-500 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-              <div className="absolute inset-x-3 bottom-3"><div className="text-[9px] uppercase tracking-[0.16em] text-[#d5c59d]">02 / Cryo</div><div className="mt-2 font-serif text-xl leading-none text-white">{featured.name}</div><div className="mt-2 flex items-center justify-between text-[9px] uppercase tracking-[0.12em] text-white/60"><span>{featured.headline}</span><ArrowRight size={12} /></div></div>
-            </Link>
-          </div>
-          <button onClick={() => scrollToSection("catalogue")} className="absolute bottom-8 right-6 hidden items-center gap-2 text-[9px] uppercase tracking-[0.24em] text-white/55 lg:flex">Explore the collection <ArrowDown size={14} /></button>
-        </section>
+        <HeroCarousel onExplore={() => scrollToSection("catalogue")} onEnquire={() => setEnquiryOpen(true)} />
 
         <StatsStrip />
 
@@ -122,6 +83,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <GalleryCarousel />
 
         <section id="sectors" className="scroll-mt-20 bg-[#20201e] px-5 py-20 text-[#f6f1e8] lg:px-16 lg:py-28">
           <div className="mx-auto max-w-[1440px]">

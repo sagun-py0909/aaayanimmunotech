@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Life Capsul L-1S placeholder">
 <defs>
 <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b2a26"/><stop offset="1" stop-color="#4f493b"/></linearGradient>
-<radialGradient id="glow" cx="0.5" cy="0.58" r="0.55"><stop offset="0" stop-color="#d5c59d" stop-opacity="0.42"/><stop offset="1" stop-color="#d5c59d" stop-opacity="0"/></radialGradient>
+<radialGradient id="glow" cx="0.5" cy="0.58" r="0.55"><stop offset="0" stop-color="#C5A059" stop-opacity="0.42"/><stop offset="1" stop-color="#C5A059" stop-opacity="0"/></radialGradient>
 <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="#efe3c4" stroke-opacity="0.05"/></pattern>
 </defs>
 <rect width="1200" height="1000" fill="url(#bg)"/>

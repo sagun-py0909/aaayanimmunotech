@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Commercial Cold Plunge placeholder">
 <defs>
-<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#133E2F"/><stop offset="1" stop-color="#1D5560"/></linearGradient>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#132F4F"/><stop offset="1" stop-color="#1D4F70"/></linearGradient>
 <radialGradient id="glow" cx="0.5" cy="0.58" r="0.55"><stop offset="0" stop-color="#9ecdd3" stop-opacity="0.42"/><stop offset="1" stop-color="#9ecdd3" stop-opacity="0"/></radialGradient>
 <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="#e4f1f2" stroke-opacity="0.05"/></pattern>
 </defs>
@@ -9,7 +9,7 @@
 <rect width="1200" height="1000" fill="url(#glow)"/>
 <path d="M300 770V330a300 300 0 0 1 600 0v440" fill="none" stroke="#e4f1f2" stroke-opacity="0.14" stroke-width="2"/>
 <path d="M0 770H1200" stroke="#e4f1f2" stroke-opacity="0.22" stroke-width="2"/>
-<ellipse cx="600" cy="790" rx="430" ry="34" fill="#0A2A1F" fill-opacity="0.18"/>
+<ellipse cx="600" cy="790" rx="430" ry="34" fill="#0A1C33" fill-opacity="0.18"/>
 <g fill="none" stroke="#e4f1f2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
 <path d="M230 540H970L930 765H270Z" fill="#e4f1f2" fill-opacity="0.08"/>
 <path d="M270 600q40-18 80 0t80 0t80 0t80 0t80 0t80 0t80 0t80 0t80 0"/>

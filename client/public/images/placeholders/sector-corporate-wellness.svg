@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Corporate Wellness placeholder">
 <defs>
-<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#133E2F"/><stop offset="1" stop-color="#1E4F55"/></linearGradient>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#132F4F"/><stop offset="1" stop-color="#1E4466"/></linearGradient>
 <radialGradient id="glow" cx="0.5" cy="0.58" r="0.55"><stop offset="0" stop-color="#b7c6d8" stop-opacity="0.42"/><stop offset="1" stop-color="#b7c6d8" stop-opacity="0"/></radialGradient>
 <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="#e6ecf3" stroke-opacity="0.05"/></pattern>
 </defs>
@@ -9,7 +9,7 @@
 <rect width="1200" height="1000" fill="url(#glow)"/>
 <path d="M300 770V330a300 300 0 0 1 600 0v440" fill="none" stroke="#e6ecf3" stroke-opacity="0.14" stroke-width="2"/>
 <path d="M0 770H1200" stroke="#e6ecf3" stroke-opacity="0.22" stroke-width="2"/>
-<ellipse cx="600" cy="790" rx="430" ry="34" fill="#0A2A1F" fill-opacity="0.18"/>
+<ellipse cx="600" cy="790" rx="430" ry="34" fill="#0A1C33" fill-opacity="0.18"/>
 <g fill="none" stroke="#e6ecf3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M420 470V340H500V470M520 470V260H620V470M640 470V370H760V470M400 470H780"/><path d="M445 370H475M445 410H475M550 300H590M550 340H590M550 380H590M670 400H730" stroke-opacity="0.5"/><g transform="translate(180 250) scale(0.7)">
 <path d="M330 330C330 300 420 300 420 330L440 690C440 740 300 750 260 730C230 715 250 690 300 690Z" fill="#e6ecf3" fill-opacity="0.08"/>
 <path d="M515 330C515 300 605 300 605 330L625 690C625 740 485 750 445 730C415 715 435 690 485 690Z" fill="#e6ecf3" fill-opacity="0.08"/>

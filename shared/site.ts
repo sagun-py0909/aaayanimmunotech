@@ -64,19 +64,21 @@ export const catalogue: Product[] = [
   product({ id: "compression-therapy-system", name: "Compression Therapy System", type: "Pneumatic sequential compression", category: "Compression", headline: "Multi-zone", description: "Pneumatic sequential compression for gyms, recovery lounges, academies and physiotherapy clinics.", specs: [["Type", "Pneumatic sequential compression"], ["Control", "Multi-zone"], ["Site needs", "Minimal — single-phase power"]], features: ["Low-footprint circuit station", "Leg, arm and hip attachments", "Complements larger modalities"], sectors: ["sports-performance", "corporate-wellness", "gyms-spas-hotels"] }),
 ];
 
+const photo = (name: string) => `/images/photos/${name}.webp`;
+
 const sectorMeta = [
-  { slug: "clinical-medical", title: "Clinical & Medical", label: "Flagship sector" },
-  { slug: "gyms-spas-hotels", title: "Gyms, Spas & Hotels", label: "Commercial" },
-  { slug: "sports-performance", title: "Sports & Performance", label: "Performance" },
-  { slug: "corporate-wellness", title: "Corporate Wellness", label: "Corporate" },
-  { slug: "personal-residential", title: "Personal & Residential", label: "Private" },
+  { slug: "clinical-medical", title: "Clinical & Medical", label: "Flagship sector", photo: "sector-clinical" },
+  { slug: "gyms-spas-hotels", title: "Gyms, Spas & Hotels", label: "Commercial", photo: "sector-hospitality" },
+  { slug: "sports-performance", title: "Sports & Performance", label: "Performance", photo: "sector-sports" },
+  { slug: "corporate-wellness", title: "Corporate Wellness", label: "Corporate", photo: "sector-corporate" },
+  { slug: "personal-residential", title: "Personal & Residential", label: "Private", photo: "sector-personal" },
 ];
 
 export type Sector = SectorContent & { title: string; label: string; image: string };
 
-export const sectors: Sector[] = sectorMeta.flatMap((meta) => {
+export const sectors: Sector[] = sectorMeta.flatMap(({ photo: photoName, ...meta }) => {
   const content = sectorContent.find((item) => item.slug === meta.slug);
-  return content ? [{ ...content, ...meta, image: placeholder(`sector-${meta.slug}`) }] : [];
+  return content ? [{ ...content, ...meta, image: photo(photoName) }] : [];
 });
 
 export const equipmentPages = contentPages.filter((page) => page.kind === "equipment");
@@ -97,15 +99,21 @@ export const guideGroups = [
 ];
 
 export const guideImages: Record<string, string> = {
-  "hbot-buying-guide": placeholder("category-hyperbaric-oxygen-chambers"),
-  "cryotherapy-buying-guide": placeholder("category-cryotherapy-chambers"),
-  "red-light-therapy-buying-guide": placeholder("category-red-light-therapy"),
-  "installation-requirements": placeholder("category-compression-therapy"),
-  "build-your-centre": placeholder("sector-gyms-spas-hotels"),
-  "recovery-centre-setup-guide": placeholder("sector-sports-performance"),
+  "hbot-buying-guide": photo("hbot-chamber-residence"),
+  "cryotherapy-buying-guide": photo("red-light-cryo-suite"),
+  "red-light-therapy-buying-guide": photo("red-light-bed"),
+  "installation-requirements": photo("clinic-chambers"),
+  "build-your-centre": photo("recovery-centre"),
+  "recovery-centre-setup-guide": photo("sector-sports"),
 };
 
-export const categoryImage = (slug: string) => placeholder(`category-${slug}`);
+// Real photography where it exists for a modality; labelled placeholders otherwise.
+const categoryPhotos: Record<string, string> = {
+  "hyperbaric-oxygen-chambers": "hbot-chamber-residence",
+  "red-light-therapy": "red-light-panel",
+};
+
+export const categoryImage = (slug: string) => (categoryPhotos[slug] ? photo(categoryPhotos[slug]) : placeholder(`category-${slug}`));
 
 export const stats = [
   { value: "25+", label: "Trusted customers", body: "Luxury hotels, premium clinics & private estates" },

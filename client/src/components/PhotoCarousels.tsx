@@ -62,8 +62,8 @@ export function HeroCarousel({ onExplore, onEnquire }: { onExplore: () => void; 
         </div>)}
       </div>
     </div>
-    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(46,10,16,.88)_0%,rgba(46,10,16,.5)_45%,rgba(46,10,16,.08)_100%)]" />
-    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,rgba(46,10,16,.85)_0%,transparent_42%)]" />
+    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(46,10,16,.6)_0%,rgba(46,10,16,.25)_45%,rgba(46,10,16,0)_100%)]" />
+    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,rgba(46,10,16,.6)_0%,transparent_42%)]" />
 
     <div className="pointer-events-none relative mx-auto flex h-full max-w-[1440px] flex-col justify-between px-5 pb-8 pt-32 lg:px-16 lg:pb-10">
       <div className="pointer-events-auto max-w-[640px]">

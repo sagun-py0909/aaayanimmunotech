@@ -21,7 +21,7 @@ export function Html({ html, as: Tag = "div", className }: { html: string; as?: 
 }
 
 const navLinks: { href: string; label: string; menu?: { href: string; label: string }[] }[] = [
-  { href: "/products", label: "Equipment", menu: [{ href: "/products", label: "Full product range" }, ...categories.map((category) => ({ href: `/equipment/${category.slug}`, label: category.label }))] },
+  { href: "/products", label: "Products", menu: [{ href: "/products", label: "Full product range" }, ...categories.map((category) => ({ href: `/equipment/${category.slug}`, label: category.label }))] },
   { href: "/sectors", label: "Sectors", menu: sectors.map((sector) => ({ href: `/sectors/${sector.slug}`, label: sector.title })) },
   { href: "/guides", label: "Buying guides", menu: guideGroups.flatMap((group) => group.slugs).map((slug) => ({ href: `/guides/${slug}`, label: guideLabels[slug] })) },
   { href: "/support", label: "Support" },

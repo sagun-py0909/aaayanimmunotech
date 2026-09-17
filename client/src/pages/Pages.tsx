@@ -2,6 +2,7 @@ import { ArrowRight, Check, Mail, MapPin, MessageCircle, Phone } from "lucide-re
 import type { FormEvent } from "react";
 import { toast } from "sonner";
 import { Link, useRoute } from "wouter";
+import { motion } from "framer-motion";
 import { PageShell, ProductCard, SiteFooter, SiteHeader, pad } from "@/components/SiteChrome";
 import { catalogue, categories, contact, guideLabels, sectors } from "@/data/site";
 import NotFound from "./NotFound";
@@ -62,20 +63,17 @@ export function ProductDetail() {
   const product = catalogue.find((item) => item.id === params?.id);
   if (!product) return <NotFound />;
   const category = categories.find((item) => item.slug === product.categorySlug);
-  const suited = sectors.filter((sector) => product.sectors.includes(sector.slug));
   const related = [...catalogue.filter((item) => item.id !== product.id && item.categorySlug === product.categorySlug), ...catalogue.filter((item) => item.id !== product.id && item.categorySlug !== product.categorySlug && item.sectors.some((slug) => product.sectors.includes(slug)))].slice(0, 3);
   return <div className="min-h-screen bg-[#f4f1ea] text-[#191918]"><SiteHeader /><main className="mx-auto max-w-[1440px] px-5 pb-24 pt-32 lg:px-16">
-    <nav aria-label="Breadcrumb" className="mb-8 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[#8a7657]"><Link href="/">Home</Link><span>/</span><Link href="/products">Products</Link>{category && <><span>/</span><Link href={`/equipment/${category.slug}`}>{category.label}</Link></>}<span>/</span><span>{product.name}</span></nav>
+    <nav aria-label="Breadcrumb" className="mb-8 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[#8a7657]"><Link href="/">Home</Link><span>/</span><Link href="/products">Products</Link>{category && <><span>/</span><Link href={`/products/${category.slug}`}>{category.label}</Link></>}<span>/</span><span>{product.name}</span></nav>
     <div className="grid gap-12 lg:grid-cols-[1.05fr_.95fr] lg:items-start">
-      <div className="relative aspect-square overflow-hidden bg-[#2b2a26] lg:sticky lg:top-28"><img src={product.image} alt={`${product.name} — ${product.type}`} className="h-full w-full object-cover" />{product.badge && <span className="absolute left-5 top-5 rounded-full bg-[#d5c59d] px-3 py-1.5 text-[9px] uppercase tracking-[0.14em] text-[#28231a]">{product.badge}</span>}</div>
+      <div className="relative overflow-hidden bg-[#2b2a26] lg:sticky lg:top-28"><img src={product.image} alt={`${product.name} — ${product.type}`} className="h-auto w-full object-contain" />{product.badge && <span className="absolute left-5 top-5 rounded-full bg-[#d5c59d] px-3 py-1.5 text-[9px] uppercase tracking-[0.14em] text-[#28231a]">{product.badge}</span>}</div>
       <div>
         <div className="text-[10px] uppercase tracking-[0.22em] text-[#9d8251]">{product.type}</div>
         <h1 className="mt-4 font-serif text-[clamp(2.8rem,5vw,5.5rem)] leading-[.9] tracking-[-0.03em]">{product.name}</h1>
         <div className="mt-4 text-[11px] uppercase tracking-[0.16em] text-[#6f6a61]">{product.headline}</div>
         <p className="mt-7 max-w-[520px] text-[15px] leading-7 text-[#5f5b53]">{product.description}</p>
-        <dl className="mt-8 border-t border-[#1d1d1b]/15">{product.specs.map(([label, value]) => <div key={label} className="grid grid-cols-[.42fr_.58fr] gap-4 border-b border-[#1d1d1b]/15 py-3.5"><dt className="text-[10px] uppercase tracking-[0.16em] text-[#8a7657]">{label}</dt><dd className="text-sm">{value}</dd></div>)}<div className="grid grid-cols-[.42fr_.58fr] gap-4 border-b border-[#1d1d1b]/15 py-3.5"><dt className="text-[10px] uppercase tracking-[0.16em] text-[#8a7657]">Commercial model</dt><dd className="text-sm">Project quotation</dd></div></dl>
-        <div className="mt-8 space-y-3">{product.features.map((feature) => <div key={feature} className="flex items-center gap-3 text-sm text-[#5f5b53]"><Check size={15} className="shrink-0 text-[#9d8251]" />{feature}</div>)}</div>
-        <div className="mt-8"><div className="text-[9px] uppercase tracking-[0.16em] text-[#8a7657]">Suited to</div><div className="mt-3 flex flex-wrap gap-2">{suited.map((sector) => <Link key={sector.slug} href={`/sectors/${sector.slug}`} className="rounded-full border border-[#1d1d1b]/15 px-3 py-1.5 text-[9px] uppercase tracking-[0.14em] text-[#4f4b43] transition hover:border-[#9d8251] hover:text-[#9d8251]">{sector.title}</Link>)}</div></div>
+        <div className="mt-10 space-y-0">{product.features.slice(0, 4).map((feature, index) => <motion.div key={feature} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.65 }} transition={{ duration: 0.55, delay: index * 0.08 }} className="flex min-h-[150px] items-start gap-5 border-t border-[#1d1d1b]/15 py-6"><span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#1d1d1b]/15 text-[#9d8251]"><Check size={15} /></span><div><div className="font-serif text-[22px] leading-tight">{feature.title}</div><p className="mt-2 text-sm leading-6 text-[#6f6a61]">{feature.body}</p></div></motion.div>)}</div>
         <div className="mt-10 flex flex-wrap gap-3"><Link href="/contact" className="inline-flex items-center gap-3 bg-[#24231f] px-5 py-4 text-[10px] uppercase tracking-[0.18em] text-white transition hover:bg-[#9d8251]">Request a quotation <ArrowRight size={14} /></Link>{category && <Link href={`/guides/${category.guide}`} className="inline-flex items-center gap-3 border border-[#24231f]/30 px-5 py-4 text-[10px] uppercase tracking-[0.18em]">{guideLabels[category.guide]}</Link>}</div>
       </div>
     </div>

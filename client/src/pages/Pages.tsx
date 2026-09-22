@@ -50,7 +50,7 @@ export function Contact() {
       </div>
       <div className="mt-7 grid gap-6 sm:grid-cols-2">
         <label className="block text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Sector<select className={fieldClass}>{sectors.map((sector) => <option key={sector.slug}>{sector.title}</option>)}<option>Exploring options</option></select></label>
-        <label className="block text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Equipment of interest<select className={fieldClass}>{catalogue.map((product) => <option key={product.id}>{product.name}</option>)}<option>Full recovery circuit</option></select></label>
+        <label className="block text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Products of interest<select className={fieldClass}>{catalogue.map((product) => <option key={product.id}>{product.name}</option>)}<option>Full recovery circuit</option></select></label>
       </div>
       <label className="mt-7 block text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Tell us about your site<textarea className={`${fieldClass} min-h-[150px] resize-none`} placeholder="Room dimensions, power availability, expected session volume, timeline..." /></label>
       <button className="mt-8 inline-flex items-center gap-3 bg-[#24231f] px-5 py-4 text-[10px] uppercase tracking-[0.18em] text-white transition hover:bg-[#9d8251]">Send enquiry <ArrowRight size={14} /></button>
@@ -65,9 +65,17 @@ export function ProductDetail() {
   const category = categories.find((item) => item.slug === product.categorySlug);
   const related = [...catalogue.filter((item) => item.id !== product.id && item.categorySlug === product.categorySlug), ...catalogue.filter((item) => item.id !== product.id && item.categorySlug !== product.categorySlug && item.sectors.some((slug) => product.sectors.includes(slug)))].slice(0, 3);
   return <div className="min-h-screen bg-[#f4f1ea] text-[#191918]"><SiteHeader /><main className="mx-auto max-w-[1440px] px-5 pb-24 pt-32 lg:px-16">
-    <nav aria-label="Breadcrumb" className="mb-8 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[#8a7657]"><Link href="/">Home</Link><span>/</span><Link href="/products">Products</Link>{category && <><span>/</span><Link href={`/products/${category.slug}`}>{category.label}</Link></>}<span>/</span><span>{product.name}</span></nav>
+    <nav aria-label="Breadcrumb" className="mb-8 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[#8a7657]"><Link href="/">Home</Link><span>/</span><Link href="/products">Products</Link>{category && <><span>/</span><Link href="/products">{category.label}</Link></>}<span>/</span><span>{product.name}</span></nav>
     <div className="grid gap-12 lg:grid-cols-[1.05fr_.95fr] lg:items-start">
-      <div className="relative overflow-hidden bg-[#2b2a26] lg:sticky lg:top-28"><img src={product.image} alt={`${product.name} — ${product.type}`} className="h-auto w-full object-contain" />{product.badge && <span className="absolute left-5 top-5 rounded-full bg-[#d5c59d] px-3 py-1.5 text-[9px] uppercase tracking-[0.14em] text-[#28231a]">{product.badge}</span>}</div>
+      <div className="space-y-5 lg:sticky lg:top-28">
+        {product.images.slice(0, 2).map((image, index) => <div key={image} className="group relative overflow-hidden rounded-[28px] border border-[#1d1d1b]/10 bg-[#ebe7de] p-5 shadow-[0_16px_45px_rgba(35,32,27,0.08)] sm:p-7">
+          <div className="pointer-events-none absolute left-5 top-5 h-14 w-14 rounded-tl-2xl border-l border-t border-[#9d8251]/35" />
+          <div className="pointer-events-none absolute bottom-5 right-5 h-14 w-14 rounded-br-2xl border-b border-r border-[#9d8251]/35" />
+          <img src={image} alt={`${product.name} — ${index === 0 ? "main view" : "alternate view"}`} className="mx-auto max-h-[520px] w-[88%] object-contain drop-shadow-[0_18px_22px_rgba(0,0,0,0.12)] transition duration-500 group-hover:scale-[1.015]" />
+          <div className="absolute left-7 top-7 rounded-full bg-[#f4f1ea]/90 px-3 py-1.5 text-[9px] uppercase tracking-[0.14em] text-[#514b42] shadow-sm">{index === 0 ? "01 / Main view" : "02 / Alternate view"}</div>
+          {index === 0 && product.badge && <span className="absolute right-7 top-7 rounded-full bg-[#d5c59d] px-3 py-1.5 text-[9px] uppercase tracking-[0.14em] text-[#28231a] shadow-sm">{product.badge}</span>}
+        </div>)}
+      </div>
       <div>
         <div className="text-[10px] uppercase tracking-[0.22em] text-[#9d8251]">{product.type}</div>
         <h1 className="mt-4 font-serif text-[clamp(2.8rem,5vw,5.5rem)] leading-[.9] tracking-[-0.03em]">{product.name}</h1>

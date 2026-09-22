@@ -21,7 +21,7 @@ export function Html({ html, as: Tag = "div", className }: { html: string; as?: 
 }
 
 const navLinks: { href: string; label: string; menu?: { href: string; label: string }[] }[] = [
-  { href: "/products", label: "Products", menu: [{ href: "/products", label: "Full product range" }, ...categories.map((category) => ({ href: `/equipment/${category.slug}`, label: category.label }))] },
+  { href: "/products", label: "Products", menu: [{ href: "/products", label: "Full product range" }, ...categories.map((category) => ({ href: "/products", label: category.label }))] },
   { href: "/sectors", label: "Sectors", menu: sectors.map((sector) => ({ href: `/sectors/${sector.slug}`, label: sector.title })) },
   { href: "/guides", label: "Buying guides", menu: guideGroups.flatMap((group) => group.slugs).map((slug) => ({ href: `/guides/${slug}`, label: guideLabels[slug] })) },
   { href: "/support", label: "Support" },
@@ -70,7 +70,7 @@ export function WhatsAppButton() {
 // The link columns mirror the legacy site's crawlable .seo-directory, so every page links to every indexable page.
 export function SiteFooter() {
   const columns = [
-    { title: "Equipment", links: categories.map((category) => ({ href: `/equipment/${category.slug}`, label: category.label })) },
+    { title: "Products", links: categories.map((category) => ({ href: "/products", label: category.label })) },
     ...guideGroups.map((group) => ({ title: group.title, links: group.slugs.map((slug) => ({ href: `/guides/${slug}`, label: guideLabels[slug] })) })),
     { title: "Sectors", links: sectors.map((sector) => ({ href: `/sectors/${sector.slug}`, label: sector.title })) },
     { title: "Company", links: [{ href: "/", label: "Home" }, { href: "/products", label: "Product range" }, { href: "/support", label: "Support" }, { href: "/contact", label: `Contact — ${contact.city}` }] },
@@ -82,7 +82,7 @@ export function SiteFooter() {
           <div>
             <Link href="/" className="whitespace-nowrap font-serif text-[clamp(1.125rem,5.5vw,1.875rem)] tracking-[0.12em]">AAAYAN IMMUNOTECH</Link>
             <div className="mt-2 text-[9px] uppercase tracking-[0.3em] text-white/45">Recovery, performance & longevity</div>
-            <p className="mt-6 max-w-[440px] text-sm leading-7 text-white/55">Wellness equipment supplier in India — specifying, installing and servicing hyperbaric oxygen, cryotherapy and photobiomodulation systems for environments that refuse to compromise.</p>
+            <p className="mt-6 max-w-[440px] text-sm leading-7 text-white/55">Wellness products supplier in India — specifying, installing and servicing recovery, wellness and performance systems for professional environments.</p>
           </div>
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between lg:justify-end lg:gap-16">
             <div className="space-y-3 text-sm text-white/65">
@@ -94,8 +94,8 @@ export function SiteFooter() {
             <Link href="/contact" className="inline-flex w-fit items-center gap-3 bg-[#d5c59d] px-5 py-3.5 text-[10px] uppercase tracking-[0.18em] text-[#1c1b18] transition hover:bg-[#f4e9cc]">Request a quotation <ArrowRight size={14} /></Link>
           </div>
         </div>
-        <nav aria-label="Equipment and guides" className="py-12">
-          <h2 className="mb-8 font-serif text-2xl text-white/85">Wellness Equipment Supplier in India — Full Range</h2>
+        <nav aria-label="Products and guides" className="py-12">
+          <h2 className="mb-8 font-serif text-2xl text-white/85">Wellness Products Supplier in India — Full Range</h2>
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
             {columns.map((column) => <div key={column.title}>
               <h3 className="mb-4 text-[9px] uppercase tracking-[0.22em] text-[#d5c59d]">{column.title}</h3>
@@ -150,10 +150,15 @@ export function PageShell({ eyebrow, title, intro, breadcrumb, headerSlot, after
 
 export function ProductCard({ product, index, selected = false, onToggle }: { product: Product; index: number; selected?: boolean; onToggle?: () => void }) {
   return <article className="group">
-    <div className="relative aspect-[1.08] overflow-hidden bg-[#2b2a26]">
-      <Link href={`/products/${product.id}`} aria-label={`View ${product.name}`}><img src={product.image} alt={`${product.name} — ${product.type}`} loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" /></Link>
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-4 top-4 flex justify-between"><span className="rounded-full bg-[#f4f1ea]/90 px-2.5 py-1 text-[9px] uppercase tracking-[0.15em] text-[#514b42]">{pad(index)}</span>{product.badge && <span className="rounded-full bg-[#d5c59d] px-2.5 py-1 text-[9px] uppercase tracking-[0.14em] text-[#28231a]">{product.badge}</span>}</div>
+    <div className="relative aspect-[1.12] overflow-hidden rounded-[28px] border border-[#1d1d1b]/10 bg-[#ebe7de] p-5 shadow-[0_16px_45px_rgba(35,32,27,0.08)] transition duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_22px_55px_rgba(35,32,27,0.13)]">
+      <div className="pointer-events-none absolute left-4 top-4 h-16 w-16 rounded-tl-2xl border-l border-t border-[#9d8251]/35" />
+      <div className="pointer-events-none absolute bottom-4 right-4 h-16 w-16 rounded-br-2xl border-b border-r border-[#9d8251]/35" />
+      <Link href={`/products/${product.id}`} aria-label={`View ${product.name}`} className="absolute inset-0 flex items-center justify-center p-7 sm:p-9">
+        <img src={product.images[0] ?? product.image} alt={`${product.name} — ${product.type}`} loading="lazy" className="h-[78%] w-[82%] object-contain drop-shadow-[0_18px_22px_rgba(0,0,0,0.12)] transition duration-700 group-hover:scale-[1.035] group-hover:opacity-0" />
+        {product.images[1] && <img src={product.images[1]} alt={`${product.name} — alternate view`} loading="lazy" className="absolute h-[78%] w-[82%] object-contain drop-shadow-[0_18px_22px_rgba(0,0,0,0.12)] opacity-0 transition duration-700 group-hover:scale-[1.035] group-hover:opacity-100" />}
+      </Link>
+      <div className="pointer-events-none absolute inset-x-5 top-5 flex items-start justify-between gap-2"><span className="rounded-full bg-[#f4f1ea]/90 px-2.5 py-1 text-[9px] uppercase tracking-[0.15em] text-[#514b42] shadow-sm">{pad(index)}</span>{product.badge && <span className="rounded-full bg-[#d5c59d] px-2.5 py-1 text-[9px] uppercase tracking-[0.14em] text-[#28231a] shadow-sm">{product.badge}</span>}</div>
+      <div className="pointer-events-none absolute bottom-5 left-5 rounded-full bg-[#191918]/75 px-3 py-1.5 text-[8px] uppercase tracking-[0.14em] text-white/90 opacity-0 transition group-hover:opacity-100">View alternate image</div>
       {onToggle && <button onClick={onToggle} aria-label={`${selected ? "Remove" : "Add"} ${product.name} ${selected ? "from" : "to"} shortlist`} className={`absolute bottom-4 right-4 flex items-center gap-2 rounded-full px-3 py-2 text-[9px] uppercase tracking-[0.12em] transition ${selected ? "bg-[#d5c59d] text-[#1c1b18]" : "bg-[#191918]/75 text-white hover:bg-[#d5c59d] hover:text-[#1c1b18]"}`}>{selected ? <Check size={13} /> : <Plus size={13} />} {selected ? "Shortlisted" : "Shortlist"}</button>}
     </div>
     <div className="pt-5">

@@ -1,0 +1,15 @@
+PRODUCT IMAGES
+
+The eight product cards/detail pages now use the supplied product images bundled under client/public/images/products/. The product page keeps the image on the left and information on the right, uses object-contain to avoid cropping, and reveals benefits one at a time while scrolling.
+
+Product image files:
+- product-infrared-sauna.jpg
+- product-hyperbaric-oxygen-hbot.jpg
+- product-dry-float-beds.jpg
+- product-float-tanks-wet.jpg
+- product-pemf.jpg
+- product-red-light-pbm-therapy-beds.jpg
+- product-localized-cryotherapy-chillers.jpg
+- product-whole-body-cryotherapy-chambers.jpg
+
+The red-light/PBM image is the clean, logo-free presentation image created for this update.

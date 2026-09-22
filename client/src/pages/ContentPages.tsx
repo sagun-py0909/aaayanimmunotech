@@ -98,7 +98,7 @@ export function EquipmentPage() {
   const [, params] = useRoute<{ slug: string }>("/equipment/:slug");
   const page = equipmentPages.find((item) => item.slug === params?.slug);
   if (!page) return <NotFound />;
-  return <ContentLayout page={page} section="Equipment" sectionHref="/products" image={categoryImage(page.slug)} products={catalogue.filter((product) => product.categorySlug === page.slug)} />;
+  return <ContentLayout page={page} section="Products" sectionHref="/products" image={categoryImage(page.slug)} products={catalogue.filter((product) => product.categorySlug === page.slug)} />;
 }
 
 export function GuidePage() {

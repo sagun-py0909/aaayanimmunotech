@@ -1,0 +1,45 @@
+export type Stage = "New enquiry" | "Qualified" | "Proposal" | "Negotiation" | "Won";
+
+export type Lead = {
+  id: number;
+  name: string;
+  company: string;
+  city: string;
+  email: string;
+  phone: string;
+  interest: string;
+  value: number;
+  stage: Stage;
+  source: string;
+  owner: string;
+  nextAction: string;
+  lastContact: string;
+  note: string;
+};
+
+export type BlogPost = {
+  id: number;
+  slug: string;
+  category: string;
+  title: string;
+  excerpt: string;
+  body: string;
+  date: string;
+  image: string;
+  status: "Draft" | "Published";
+};
+
+export const seedLeads: Lead[] = [
+  { id: 1, name: "Dr. Kavya Menon", company: "Asteria Recovery Clinic", city: "Mumbai", email: "kavya@asteria.health", phone: "+91 98210 44018", interest: "Aether HBOT 3.0", value: 6800000, stage: "Proposal", source: "Website enquiry", owner: "Aarav", nextAction: "Send revised site plan", lastContact: "Today", note: "Opening a second recovery floor in Q1. Needs a compact footprint and commissioning included." },
+  { id: 2, name: "Rohan Batra", company: "Pulse Performance Club", city: "Bengaluru", email: "rohan@pulseclub.in", phone: "+91 98450 21812", interest: "NØRDIK Chamber + Luma 850", value: 4200000, stage: "Qualified", source: "Referral", owner: "Mira", nextAction: "Book site survey", lastContact: "Yesterday", note: "High-throughput member recovery space. Decision expected after the site walk-through." },
+  { id: 3, name: "Ananya Shah", company: "The Sundara", city: "Goa", email: "ananya@thesundara.com", phone: "+91 98900 77410", interest: "Complete recovery circuit", value: 9200000, stage: "Negotiation", source: "Hospitality partner", owner: "Aarav", nextAction: "Review commercial terms", lastContact: "08 Sep", note: "Boutique hospitality project. Comparing two suppliers on service coverage and delivery timeline." },
+  { id: 4, name: "Vikram Iyer", company: "Iyer Wellness Residence", city: "New Delhi", email: "vikram@iyerwellness.com", phone: "+91 98100 35199", interest: "Luma 850 Bed", value: 1650000, stage: "New enquiry", source: "Instagram", owner: "Mira", nextAction: "Qualify requirements", lastContact: "08 Sep", note: "Private home installation. Asked for dimensions, power requirements, and delivery estimate." },
+  { id: 5, name: "Mehul Joshi", company: "Northstar Sports Lab", city: "Hyderabad", email: "mehul@northstarsports.in", phone: "+91 99120 16276", interest: "Aether HBOT 3.0", value: 5800000, stage: "Won", source: "Trade event", owner: "Aarav", nextAction: "Confirm installation date", lastContact: "05 Sep", note: "Signed order. Operations team is ready for operator training and handover." },
+  { id: 6, name: "Priya Kapoor", company: "Restore House", city: "Pune", email: "priya@restorehouse.in", phone: "+91 98220 88701", interest: "Mizu Cold Plunge", value: 980000, stage: "New enquiry", source: "Website enquiry", owner: "Mira", nextAction: "Call to understand scope", lastContact: "04 Sep", note: "Interested in a two-station contrast therapy room for a new membership tier." },
+];
+
+export const seedPosts: BlogPost[] = [
+  { id: 1, slug: "how-to-specify-a-recovery-room", category: "Buying guide", title: "How to specify a recovery room that performs", excerpt: "The practical questions to ask before choosing equipment, planning a footprint, or building an operating model.", body: "", date: "08 Sep 2026", image: "/manus-storage/hyperbaric-room_f8b7624d.webp", status: "Published" },
+  { id: 2, slug: "understanding-hyperbaric-oxygen-environments", category: "Science", title: "Understanding hyperbaric oxygen environments", excerpt: "A clear introduction to chamber formats, pressure, and the role of clinical oversight.", body: "", date: "28 Aug 2026", image: "/manus-storage/cryotherapy-gym_647bf934.jpg", status: "Published" },
+  { id: 3, slug: "the-new-language-of-recovery-interiors", category: "Design & space", title: "The new language of recovery interiors", excerpt: "Why the best wellness spaces feel less like equipment rooms and more like destinations.", body: "", date: "14 Aug 2026", image: "/manus-storage/wellness-club_26daad98.jpg", status: "Draft" },
+];

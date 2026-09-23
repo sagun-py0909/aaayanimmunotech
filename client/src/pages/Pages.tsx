@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import { ArrowRight, ArrowUpRight, Check, Mail, MapPin, Phone, Play } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { catalogue, PageShell, SiteFooter, SiteHeader } from "./Products";
+import type { BlogPost } from "@shared/lead-desk";
 
 const sectorCards = [
   { title: "Clinics & medical", label: "Clinical environments", body: "Specify premium recovery systems around patient experience, protocols, and operator confidence.", image: "/manus-storage/hyperbaric-room_f8b7624d.webp", points: ["Clinical-grade capability", "Site planning support", "Commissioning and training"] },
@@ -14,14 +16,24 @@ export function Sectors() {
 }
 
 const posts = [
-  { category: "Buying guide", title: "How to specify a recovery room that performs", excerpt: "The practical questions to ask before choosing equipment, planning a footprint, or building an operating model.", date: "08 Sep 2026", image: "/manus-storage/hyperbaric-room_f8b7624d.webp", featured: true },
-  { category: "Science", title: "Understanding hyperbaric oxygen environments", excerpt: "A clear introduction to chamber formats, pressure, and the role of clinical oversight.", date: "28 Aug 2026", image: "/manus-storage/cryotherapy-gym_647bf934.jpg" },
-  { category: "Design & space", title: "The new language of recovery interiors", excerpt: "Why the best wellness spaces feel less like equipment rooms and more like destinations.", date: "14 Aug 2026", image: "/manus-storage/wellness-club_26daad98.jpg" },
-  { category: "Operator guide", title: "From delivery to daily confidence", excerpt: "What commissioning, training, and service support should look like after installation.", date: "02 Aug 2026", image: "/manus-storage/red-light-room_6bd1bed1.jpg" },
+  { slug: "how-to-specify-a-recovery-room", category: "Buying guide", title: "How to specify a recovery room that performs", excerpt: "The practical questions to ask before choosing equipment, planning a footprint, or building an operating model.", date: "08 Sep 2026", image: "/manus-storage/hyperbaric-room_f8b7624d.webp", featured: true },
+  { slug: "understanding-hyperbaric-oxygen-environments", category: "Science", title: "Understanding hyperbaric oxygen environments", excerpt: "A clear introduction to chamber formats, pressure, and the role of clinical oversight.", date: "28 Aug 2026", image: "/manus-storage/cryotherapy-gym_647bf934.jpg" },
+  { slug: "the-new-language-of-recovery-interiors", category: "Design & space", title: "The new language of recovery interiors", excerpt: "Why the best wellness spaces feel less like equipment rooms and more like destinations.", date: "14 Aug 2026", image: "/manus-storage/wellness-club_26daad98.jpg" },
+  { slug: "from-delivery-to-daily-confidence", category: "Operator guide", title: "From delivery to daily confidence", excerpt: "What commissioning, training, and service support should look like after installation.", date: "02 Aug 2026", image: "/manus-storage/red-light-room_6bd1bed1.jpg" },
 ];
 
 export function Blogs() {
-  return <PageShell eyebrow="Science & journal" title={<>Ideas for a<br /><em>healthier future.</em></>} intro="Practical guidance, science-led explainers, and the thinking behind the spaces where recovery happens." breadcrumb="Journal"><div className="grid gap-x-6 gap-y-12 md:grid-cols-2">{posts.map((post) => <article key={post.title} className={post.featured ? "md:col-span-2" : ""}><Link href="/blogs/how-to-specify-a-recovery-room" className={`group grid gap-7 ${post.featured ? "lg:grid-cols-[1.25fr_.75fr] lg:items-center" : ""}`}><div className={`overflow-hidden bg-[#ded8cc] ${post.featured ? "aspect-[1.5]" : "aspect-[1.22]"}`}><img src={post.image} alt="" className="h-full w-full object-cover mix-blend-multiply transition duration-500 group-hover:scale-105 group-hover:mix-blend-normal" /></div><div><div className="text-[10px] uppercase tracking-[0.2em] text-[#9d8251]">{post.category} · {post.date}</div><h2 className={`mt-3 font-serif leading-[.95] ${post.featured ? "text-5xl lg:text-6xl" : "text-3xl"}`}>{post.title}</h2><p className="mt-4 max-w-[430px] text-sm leading-6 text-[#6f6a61]">{post.excerpt}</p><span className="mt-6 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.18em]">Read article <ArrowUpRight size={14} /></span></div></Link></article>)}</div></PageShell>;
+  const [managedPosts, setManagedPosts] = useState<typeof posts>(posts);
+  useEffect(() => { fetch("/api/posts/published").then((response) => response.ok ? response.json() : Promise.reject()).then((data: { posts: BlogPost[] }) => setManagedPosts(data.posts.map((post, index) => ({ ...post, featured: index === 0 })))).catch(() => undefined); }, []);
+  return <PageShell eyebrow="Science & journal" title={<>Ideas for a<br /><em>healthier future.</em></>} intro="Practical guidance, science-led explainers, and the thinking behind the spaces where recovery happens." breadcrumb="Journal"><div className="grid gap-x-6 gap-y-12 md:grid-cols-2">{managedPosts.map((post) => <article key={post.title} className={post.featured ? "md:col-span-2" : ""}><Link href={`/blogs/${post.slug}`} className={`group grid gap-7 ${post.featured ? "lg:grid-cols-[1.25fr_.75fr] lg:items-center" : ""}`}><div className={`overflow-hidden bg-[#ded8cc] ${post.featured ? "aspect-[1.5]" : "aspect-[1.22]"}`}><img src={post.image} alt="" className="h-full w-full object-cover mix-blend-multiply transition duration-500 group-hover:scale-105 group-hover:mix-blend-normal" /></div><div><div className="text-[10px] uppercase tracking-[0.2em] text-[#9d8251]">{post.category} · {post.date}</div><h2 className={`mt-3 font-serif leading-[.95] ${post.featured ? "text-5xl lg:text-6xl" : "text-3xl"}`}>{post.title}</h2><p className="mt-4 max-w-[430px] text-sm leading-6 text-[#6f6a61]">{post.excerpt}</p><span className="mt-6 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.18em]">Read article <ArrowUpRight size={14} /></span></div></Link></article>)}</div></PageShell>;
+}
+
+export function DynamicBlogDetail() {
+  const [, params] = useRoute<{ slug: string }>("/blogs/:slug");
+  const [post, setPost] = useState<BlogPost | null>(null);
+  useEffect(() => { if (params?.slug) fetch(`/api/posts/published/${params.slug}`).then((response) => response.ok ? response.json() : Promise.reject()).then(setPost).catch(() => setPost(null)); }, [params?.slug]);
+  if (!post) return <PageShell eyebrow="Journal" title={<>Article<br /><em>not found.</em></>} intro="This article may have moved or is not published yet." breadcrumb="Journal"><div /></PageShell>;
+  return <PageShell eyebrow={`${post.category} / ${post.date}`} title={<>{post.title}</>} intro={post.excerpt} breadcrumb="Journal / Article"><article className="mx-auto max-w-[940px]"><img src={post.image} alt={post.title} className="aspect-[1.8] w-full object-cover" /><div className="mx-auto max-w-[700px] whitespace-pre-wrap py-12 text-sm leading-7 text-[#5f5b53]">{post.body || post.excerpt}</div></article></PageShell>;
 }
 
 export function BlogDetail() {

@@ -15,9 +15,10 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (email.trim().toLowerCase() !== "admin@aaayan.in" || password !== "aaayan123") {
+    const response = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) });
+    if (!response.ok) {
       setError("That email or password is not recognised.");
       return;
     }

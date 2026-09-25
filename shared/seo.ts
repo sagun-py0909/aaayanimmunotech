@@ -1,4 +1,4 @@
-import { catalogue, categories, contact, equipmentPages, guideLabels, guides, plainText, sectors, type Product } from "./site";
+import { catalogue, categories, contact, equipmentPages, guideLabels, guides, plainText, productsForLegacyCategory, sectors, type Product } from "./site";
 import type { Faq } from "./content-types";
 
 // Production host is the apex domain — www and http both 301 to it, so every canonical must match.
@@ -52,7 +52,7 @@ const INSTALL_SERVICE: Node = {
   provider: { "@id": `${SITE}/#organization` },
   areaServed: [{ "@type": "Country", name: "India" }],
   description: "End-to-end supply and installation of wellness recovery equipment: site survey, civil and electrical coordination, delivery, commissioning, operator training and service support.",
-  hasOfferCatalog: { "@type": "OfferCatalog", name: "Wellness equipment categories", itemListElement: categories.map((category) => ({ "@type": "OfferCatalog", name: category.label, url: `${SITE}/equipment/${category.slug}` })) },
+  hasOfferCatalog: { "@type": "OfferCatalog", name: "Wellness equipment categories", itemListElement: categories.map((category) => ({ "@type": "OfferCatalog", name: category.label, url: `${SITE}/products/${category.slug}` })) },
 };
 
 const breadcrumb = (trail: [string, string][]): Node => ({
@@ -104,7 +104,7 @@ function buildEntries(): SeoEntry[] {
 
   for (const page of equipmentPages) {
     const path = `/equipment/${page.slug}`;
-    const products = catalogue.filter((item) => item.categorySlug === page.slug);
+    const products = productsForLegacyCategory(page.slug);
     entries.push({
       path,
       title: page.metaTitle,
@@ -126,7 +126,6 @@ function buildEntries(): SeoEntry[] {
       changefreq: "monthly",
       priority: 0.8,
       // No `offers`: pricing is quote-on-request, and a placeholder price would violate structured-data policy.
-      // No `image` yet: the catalogue uses SVG placeholders, which rich results do not accept.
       graph: [
         {
           "@type": "Product",
@@ -134,6 +133,7 @@ function buildEntries(): SeoEntry[] {
           name: item.name,
           description: item.description,
           category: item.type,
+          image: item.images.map((image) => `${SITE}${image}`),
           brand: { "@type": "Brand", name: BRAND },
           url: `${SITE}${path}`,
           additionalProperty: item.specs.map(([name, value]) => ({ "@type": "PropertyValue", name, value })),
@@ -231,12 +231,29 @@ export const seoForPath = (pathname: string) => byPath.get(normalisePath(pathnam
 export const legacyRedirects: Record<string, string> = {
   "/index.html": "/",
   "/suits_page.html": "/products",
-  "/suit_product_1.html": "/products/superhuman-suite",
-  "/suit_product_2.html": "/products/longevity-suite",
-  "/suit_product_3.html": "/products/recovery-suite",
-  "/product_page.html": "/products/superhuman-suite",
+  // The legacy suit pages were all red light / PBM beds, so they land on that modality.
+  "/suit_product_1.html": "/products/red-light-pbm-therapy-beds",
+  "/suit_product_2.html": "/products/red-light-pbm-therapy-beds",
+  "/suit_product_3.html": "/products/red-light-pbm-therapy-beds",
+  "/product_page.html": "/products/red-light-pbm-therapy-beds",
   "/contact.html": "/contact",
   "/blogs": "/guides",
+  // The 13 model pages the redesign carried before the catalogue moved to modalities.
+  ...Object.fromEntries(Object.entries({
+    "oxyl-25": "hyperbaric-oxygen-hbot",
+    "life-capsul-l1s": "hyperbaric-oxygen-hbot",
+    "life-capsul-l2s": "hyperbaric-oxygen-hbot",
+    "cryoduo-4": "whole-body-cryotherapy-chambers",
+    "cryoduo-6": "whole-body-cryotherapy-chambers",
+    "max-miracle-9600": "red-light-pbm-therapy-beds",
+    "miracle-6200": "red-light-pbm-therapy-beds",
+    "miracle-5040": "red-light-pbm-therapy-beds",
+    "superhuman-suite": "red-light-pbm-therapy-beds",
+    "longevity-suite": "red-light-pbm-therapy-beds",
+    "recovery-suite": "red-light-pbm-therapy-beds",
+    "commercial-cold-plunge": "whole-body-cryotherapy-chambers",
+    "compression-therapy-system": "pemf",
+  }).map(([from, to]) => [`/products/${from}`, `/products/${to}`])),
   ...Object.fromEntries(equipmentPages.map((page) => [page.legacyPath, `/equipment/${page.slug}`])),
   ...Object.fromEntries(guides.map((page) => [page.legacyPath, `/guides/${page.slug}`])),
   ...Object.fromEntries(sectors.map((sector) => [sector.legacyPath, `/sectors/${sector.slug}`])),

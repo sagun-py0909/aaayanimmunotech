@@ -11,13 +11,28 @@ export type Product = {
   description: string;
   specs: [string, string][];
   features: { title: string; body: string }[];
+  /** Commercial outcomes for the operator — what the room earns, not what the therapy does. */
+  gains: { title: string; body: string }[];
   image: string;
   images: string[];
+  /** Product photography plus the site photography that suits the modality. */
+  gallery: string[];
   badge?: string;
   sectors: string[];
 };
 
+const photo = (name: string) => `/images/photos/${name}.webp`;
 const productImage = (name: string) => `/images/products/${name}.jpg`;
+const galleryPhotos: Record<string, string[]> = {
+  "infrared-sauna": ["recovery-lounge-skyline", "lounge-private"],
+  "hyperbaric-oxygen-hbot": ["hbot-chamber-residence", "hbot-multiplace-interior", "clinic-chambers"],
+  "dry-float-beds": ["lounge-private", "recovery-centre"],
+  "float-tanks-wet": ["residence-pod", "recovery-lounge-skyline"],
+  "pemf": ["recovery-centre", "sector-sports"],
+  "red-light-pbm-therapy-beds": ["red-light-bed", "red-light-panel", "red-light-cryo-suite"],
+  "localized-cryotherapy-chillers": ["red-light-cryo-suite", "sector-sports"],
+  "whole-body-cryotherapy-chambers": ["red-light-cryo-suite", "sector-sports", "recovery-centre"],
+};
 const productGallery: Record<string, string[]> = {
   "infrared-sauna": ["/images/products/infrared-sauna-2.jpg"],
   "hyperbaric-oxygen-hbot": ["/images/products/hyperbaric-oxygen-hbot-2.jpg"],
@@ -55,12 +70,16 @@ export const categories = [
 
 export const categoryNames = ["All products", ...categories.map((category) => category.name)];
 
-const product = (item: Omit<Product, "image" | "categorySlug">): Product => ({
-  ...item,
-  categorySlug: categories.find((category) => category.name === item.category)?.slug ?? "",
-  image: productImage(item.id),
-  images: [productImage(item.id), ...(productGallery[item.id] ?? [])],
-});
+const product = (item: Omit<Product, "image" | "categorySlug" | "images" | "gallery">): Product => {
+  const images = [productImage(item.id), ...(productGallery[item.id] ?? [])];
+  return {
+    ...item,
+    categorySlug: categories.find((category) => category.name === item.category)?.slug ?? "",
+    image: productImage(item.id),
+    images,
+    gallery: [...images, ...(galleryPhotos[item.id] ?? []).map(photo)],
+  };
+};
 
 export const catalogue: Product[] = [
   product({
@@ -77,6 +96,12 @@ export const catalogue: Product[] = [
       { title: "Full-body sessions", body: "Designed for seated, full-body sauna sessions." },
       { title: "Wellness focused", body: "Suitable for spas, wellness centres and recovery facilities." },
       { title: "Planned installation", body: "Room, electrical and ventilation requirements can be reviewed before installation." },
+    ],
+    gains: [
+      { title: "A service members recognise", body: "Infrared sauna is familiar to members, so it needs little explaining at the point of sale." },
+      { title: "Low staffing per session", body: "Sessions run to a timer and need supervision rather than an operator in the room." },
+      { title: "Fits an existing room", body: "A cabin can occupy a spare treatment room instead of new construction." },
+      { title: "Pairs with cold", body: "Sits naturally beside cryotherapy or a plunge as a contrast circuit members book together." },
     ],
     sectors: ["gyms-spas-hotels", "corporate-wellness", "personal-residential"],
   }),
@@ -95,6 +120,12 @@ export const catalogue: Product[] = [
       { title: "Multiple configurations", body: "Available in configurations suited to different facility requirements." },
       { title: "Site planning", body: "Access, power, ventilation and room requirements are assessed before installation." },
     ],
+    gains: [
+      { title: "A premium line on the price list", body: "HBOT sessions are the highest-value item in most recovery menus." },
+      { title: "Booked in courses", body: "Clients typically buy a block of sessions, which makes revenue easier to forecast." },
+      { title: "A reason to be referred", body: "Few facilities in a given city operate a chamber, which supports referrals and enquiries." },
+      { title: "Planned before it is bought", body: "We confirm access, power, floor loading and ventilation first, so the room is right the first time." },
+    ],
     sectors: ["clinical-medical", "sports-performance", "gyms-spas-hotels"],
   }),
   product({
@@ -111,6 +142,12 @@ export const catalogue: Product[] = [
       { title: "Fully clothed sessions", body: "The user remains dry and clothed during a session." },
       { title: "Relaxation focused", body: "Designed for rest, relaxation and recovery environments." },
       { title: "Facility friendly", body: "Suitable for spas, wellness centres and recovery lounges." },
+    ],
+    gains: [
+      { title: "No water plant", body: "There is no tank to fill, filter or drain, so running costs stay close to the electricity bill." },
+      { title: "Short turnaround", body: "Clients stay dry and clothed, so there is no shower or changing time between bookings." },
+      { title: "Easy to staff", body: "One member of staff can run the room alongside other duties." },
+      { title: "Small footprint", body: "A bed fits a standard treatment room, which suits spas adding a service without building." },
     ],
     sectors: ["gyms-spas-hotels", "corporate-wellness", "personal-residential"],
   }),
@@ -129,6 +166,12 @@ export const catalogue: Product[] = [
       { title: "Relaxation environment", body: "Suitable for dedicated wellness and recovery spaces." },
       { title: "Installation planning", body: "Floor loading, access, water and drainage requirements should be checked in advance." },
     ],
+    gains: [
+      { title: "A destination service", body: "A float room gives a spa or studio something guests travel for and post about." },
+      { title: "Long, high-value bookings", body: "Sessions are typically an hour, which supports a higher price per booking." },
+      { title: "Planned plant room", body: "Filtration, water treatment and drainage are specified with you before the order." },
+      { title: "Quiet neighbour", body: "A float room needs isolation from noise, which suits an unused corner of a building." },
+    ],
     sectors: ["gyms-spas-hotels", "personal-residential", "corporate-wellness"],
   }),
   product({
@@ -145,6 +188,12 @@ export const catalogue: Product[] = [
       { title: "Targeted application", body: "Applicator formats can be selected around the intended treatment area." },
       { title: "Session based", body: "Designed for repeatable, protocol-led sessions." },
       { title: "Professional setup", body: "Suitable for wellness, recovery and rehabilitation environments." },
+    ],
+    gains: [
+      { title: "Lowest barrier to entry", body: "A PEMF system needs a bed-sized space and single-phase power." },
+      { title: "Adds to an existing session", body: "Runs alongside physiotherapy, training or recovery appointments already on the books." },
+      { title: "Portable between rooms", body: "Systems can be moved, so a facility can test demand before committing a room." },
+      { title: "Short sessions", body: "Session lengths suit a circuit where clients move between stations." },
     ],
     sectors: ["clinical-medical", "sports-performance", "corporate-wellness"],
   }),
@@ -163,6 +212,12 @@ export const catalogue: Product[] = [
       { title: "Repeatable sessions", body: "Built for scheduled sessions in professional facilities." },
       { title: "Easy access", body: "Bed-style access supports straightforward user positioning." },
     ],
+    gains: [
+      { title: "High throughput", body: "Short sessions and no changeover plant mean a single bed can serve a full day of bookings." },
+      { title: "Membership add-on", body: "Commonly sold as an add-on tier rather than a one-off, which supports recurring revenue." },
+      { title: "Straightforward install", body: "A bed needs floor space and power, with no water, gas or pressure systems." },
+      { title: "Visible in a space", body: "The bed itself photographs well, which helps a facility market the service." },
+    ],
     sectors: ["clinical-medical", "sports-performance", "gyms-spas-hotels"],
   }),
   product({
@@ -179,6 +234,12 @@ export const catalogue: Product[] = [
       { title: "Controlled temperature", body: "Chiller-supported operation provides controlled cooling." },
       { title: "Recovery focused", body: "Suitable for sports recovery and wellness facilities." },
       { title: "Compact planning", body: "Can be specified around the available treatment-room layout." },
+    ],
+    gains: [
+      { title: "Entry point to cryotherapy", body: "A chiller lets a facility offer cryotherapy before committing to a full chamber." },
+      { title: "Targeted, short sessions", body: "Sessions are brief and applied to one area, so they slot between appointments." },
+      { title: "Compact and movable", body: "Units suit physiotherapy rooms, clinics and gym floors without a dedicated room." },
+      { title: "Supports a chamber", body: "Works alongside a whole body chamber as a lower-priced option on the same menu." },
     ],
     sectors: ["sports-performance", "clinical-medical", "gyms-spas-hotels"],
   }),
@@ -197,11 +258,16 @@ export const catalogue: Product[] = [
       { title: "Professional throughput", body: "Suitable for recovery centres, sports facilities and wellness businesses." },
       { title: "Safety planning", body: "Room layout, ventilation, operating procedures and site requirements should be assessed before installation." },
     ],
+    gains: [
+      { title: "The headline of a recovery floor", body: "A chamber is the service most members and athletes ask for by name." },
+      { title: "Volume per hour", body: "Sessions run a few minutes, so one chamber can serve many people in a peak hour." },
+      { title: "Sold as a package", body: "Session blocks and memberships suit the format, which supports repeat revenue." },
+      { title: "Specified around your room", body: "Nitrogen or electric, and the capacity, are chosen against your space, power and expected volume." },
+    ],
     sectors: ["sports-performance", "gyms-spas-hotels", "clinical-medical"],
   }),
 ];
 
-const photo = (name: string) => `/images/photos/${name}.webp`;
 
 const sectorMeta = [
   { slug: "clinical-medical", title: "Clinical & Medical", label: "Flagship sector", photo: "sector-clinical" },
@@ -244,13 +310,30 @@ export const guideImages: Record<string, string> = {
   "recovery-centre-setup-guide": photo("sector-sports"),
 };
 
-// Real photography where it exists for a modality; labelled placeholders otherwise.
+// The legacy equipment pages keep their own URLs for the rankings they carry, so they are mapped
+// onto the current catalogue rather than matched on category slug.
+export const legacyCategoryProducts: Record<string, string[]> = {
+  "hyperbaric-oxygen-chambers": ["hyperbaric-oxygen-hbot"],
+  "cryotherapy-chambers": ["whole-body-cryotherapy-chambers", "localized-cryotherapy-chillers"],
+  "red-light-therapy": ["red-light-pbm-therapy-beds", "pemf"],
+  "cold-plunge": ["whole-body-cryotherapy-chambers", "localized-cryotherapy-chillers", "float-tanks-wet"],
+  "compression-therapy": ["pemf", "dry-float-beds"],
+};
+
+export const productsForLegacyCategory = (slug: string) =>
+  (legacyCategoryProducts[slug] ?? []).flatMap((id) => catalogue.filter((item) => item.id === id));
+
+// Real photography where it exists for a modality; the product photograph otherwise.
 const categoryPhotos: Record<string, string> = {
   "hyperbaric-oxygen-chambers": "hbot-chamber-residence",
   "red-light-therapy": "red-light-panel",
+  "cryotherapy-chambers": "red-light-cryo-suite",
+  "cold-plunge": "recovery-centre",
+  "compression-therapy": "recovery-lounge-skyline",
 };
 
-export const categoryImage = (slug: string) => (categoryPhotos[slug] ? photo(categoryPhotos[slug]) : placeholder(`category-${slug}`));
+export const categoryImage = (slug: string) =>
+  categoryPhotos[slug] ? photo(categoryPhotos[slug]) : productsForLegacyCategory(slug)[0]?.image ?? photo("recovery-centre");
 
 export const stats = [
   { value: "25+", label: "Trusted customers", body: "Luxury hotels, premium clinics & private estates" },

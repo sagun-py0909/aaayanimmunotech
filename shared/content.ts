@@ -44,8 +44,8 @@ export const contentPages: ContentPage[] = [
                 "title": "Life Capsul L-1S",
                 "body": "Monoplace hyperbaric chamber. The reference specification for a clinic adding its first HBOT room, and the most common answer to monoplace hyperbaric chamber price enquiries in India.",
                 "link": {
-                  "label": "View the L-1S",
-                  "href": "/products/life-capsul-l1s"
+                  "label": "View HBOT systems",
+                  "href": "/products/hyperbaric-oxygen-hbot"
                 }
               },
               {
@@ -53,8 +53,8 @@ export const contentPages: ContentPage[] = [
                 "title": "Life Capsul L-2S",
                 "body": "Dual-occupancy hyperbaric chamber for couples, athletes training in pairs, or a clinic that needs to double session capacity without doubling floor area.",
                 "link": {
-                  "label": "View the L-2S",
-                  "href": "/products/life-capsul-l2s"
+                  "label": "View HBOT systems",
+                  "href": "/products/hyperbaric-oxygen-hbot"
                 }
               },
               {
@@ -62,8 +62,8 @@ export const contentPages: ContentPage[] = [
                 "title": "OXYL-25 Suite",
                 "body": "Multiplace hyperbaric oxygen chamber at 5.8 cubic metres. Walk-in architecture for hospitals, corporate campuses and high-volume recovery centres.",
                 "link": {
-                  "label": "View the OXYL-25",
-                  "href": "/products/oxyl-25"
+                  "label": "View HBOT systems",
+                  "href": "/products/hyperbaric-oxygen-hbot"
                 }
               }
             ]
@@ -229,8 +229,8 @@ export const contentPages: ContentPage[] = [
                 "title": "CryoDuo 4",
                 "body": "Four-person electric cryotherapy chamber with a pre-chamber stage that prevents thermal shock. The standard specification for a gym or a physiotherapy clinic adding recovery.",
                 "link": {
-                  "label": "View the CryoDuo 4",
-                  "href": "/products/cryoduo-4"
+                  "label": "View cryotherapy chambers",
+                  "href": "/products/whole-body-cryotherapy-chambers"
                 }
               },
               {
@@ -238,8 +238,8 @@ export const contentPages: ContentPage[] = [
                 "title": "CryoDuo Elite 6",
                 "body": "Six-person multi person cryotherapy chamber for sports academies and high-volume memberships. Processes a full squad rotation without a queue.",
                 "link": {
-                  "label": "View the CryoDuo Elite 6",
-                  "href": "/products/cryoduo-6"
+                  "label": "View cryotherapy chambers",
+                  "href": "/products/whole-body-cryotherapy-chambers"
                 }
               }
             ]
@@ -401,8 +401,8 @@ export const contentPages: ContentPage[] = [
                 "title": "The Miracle 5040",
                 "body": "Full body red light therapy bed with an optimal-distance array. The entry specification for a clinic or a private installation adding photobiomodulation.",
                 "link": {
-                  "label": "View the Miracle 5040",
-                  "href": "/products/miracle-5040"
+                  "label": "View red light / PBM beds",
+                  "href": "/products/red-light-pbm-therapy-beds"
                 }
               },
               {
@@ -410,8 +410,8 @@ export const contentPages: ContentPage[] = [
                 "title": "The Miracle 6200",
                 "body": "660nm and 850nm dual-chip 660nm 850nm red light bed delivering 123 J/cm², so effective sessions run under fifteen minutes.",
                 "link": {
-                  "label": "View the Miracle 6200",
-                  "href": "/products/miracle-6200"
+                  "label": "View red light / PBM beds",
+                  "href": "/products/red-light-pbm-therapy-beds"
                 }
               },
               {
@@ -419,8 +419,8 @@ export const contentPages: ContentPage[] = [
                 "title": "Max Miracle 9600",
                 "body": "The highest power output in the range, with motorised auto-lift access. Built for commercial turnover where shorter sessions mean more clients per day.",
                 "link": {
-                  "label": "View the Max Miracle 9600",
-                  "href": "/products/max-miracle-9600"
+                  "label": "View red light / PBM beds",
+                  "href": "/products/red-light-pbm-therapy-beds"
                 }
               }
             ]

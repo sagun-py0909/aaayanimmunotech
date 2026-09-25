@@ -68,8 +68,8 @@ export function SiteFooter() {
     { title: "Company", links: [{ href: "/", label: "Home" }, { href: "/products", label: "All products" }, { href: "/blog", label: "Blog" }, { href: "/support", label: "Installation & support" }, { href: "/contact", label: "Contact us" }] },
   ];
   return <>
-    <footer className="bg-[#3D0F17] px-5 pb-10 pt-16 text-white lg:px-10">
-      <div className="mx-auto max-w-[1200px]">
+    <footer className="bg-[#3D0F17] pb-10 pt-16 text-white">
+      <div className="mx-auto max-w-[1200px] px-5 lg:px-10">
         <div className="flex flex-col gap-8 border-b border-white/10 pb-10 md:flex-row md:items-start md:justify-between">
           <div>
             <Link href="/" className="font-serif text-2xl tracking-[0.1em]">AAAYAN IMMUNOTECH</Link>

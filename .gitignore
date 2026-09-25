@@ -116,3 +116,5 @@ client/public/__manus__/version.json
 # Internal handover notes, kept out of the public repo.
 handover/
 server/data/
+
+.env*

@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { ArrowRight, Building2, CalendarClock, Check, ChevronDown, CircleDollarSign, Filter, Mail, MapPin, Phone, Plus, Search, SlidersHorizontal, Sparkles, UserRound, X } from "lucide-react";
+import { ArrowRight, Building2, FileText, Users, CalendarClock, Check, ChevronDown, CircleDollarSign, Filter, Mail, MapPin, Phone, Plus, Search, SlidersHorizontal, Sparkles, UserRound, X } from "lucide-react";
 import { toast } from "sonner";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import { catalogue } from "@/data/site";
 import { stages, type Lead, type Stage } from "@shared/lead-desk";
+import BlogDesk from "./BlogDesk";
 
 const stageTints: Record<Stage, string> = {
   "New enquiry": "bg-[#efe6dc] text-[#7d6b4e]",
@@ -15,7 +16,51 @@ const stageTints: Record<Stage, string> = {
 
 const formatValue = (value: number) => `Rs ${(value / 100000).toFixed(value >= 10000000 ? 0 : 1)}L`;
 
+// The desk has two workspaces, chosen by ?tab= so a reload or a shared link lands in the same place:
+// the lead funnel (default) and the blog (?tab=blog, with &post=<id|new> for the editor).
 export default function CRM() {
+  const params = new URLSearchParams(useSearch());
+  const tab = params.get("tab") === "blog" ? "blog" : "leads";
+  const openPost = params.get("post");
+
+  const go = (next: { tab?: "leads" | "blog"; post?: string | null }) => {
+    const query = new URLSearchParams();
+    if ((next.tab ?? tab) === "blog") query.set("tab", "blog");
+    if (next.post) query.set("post", next.post);
+    const search = query.toString();
+    window.history.pushState(null, "", `/crm${search ? `?${search}` : ""}`);
+    window.scrollTo(0, 0);
+  };
+
+  const signOut = () => {
+    void fetch("/api/auth/logout", { method: "POST" }).finally(() => window.location.replace("/login"));
+  };
+
+  return <div className="min-h-screen bg-[#f4f1ea] text-[#4E141D]">
+    <header className="border-b border-[#4E141D]/10 bg-[#4E141D] text-[#f7f3ea]">
+      <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-5 py-4 lg:px-10">
+        <div className="flex items-center gap-6 lg:gap-10">
+          <Link href="/" className="flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#C5A059]/60 text-[10px] tracking-[0.2em] text-[#C5A059]">AA</span>
+            <span className="hidden sm:block"><span className="block font-serif text-[17px] tracking-[0.14em]">AAAYAN</span><span className="block text-[8px] uppercase tracking-[0.3em] text-white/45">Lead desk</span></span>
+          </Link>
+          <nav className="flex items-center gap-1" aria-label="Desk sections">
+            {([["leads", "Leads", Users], ["blog", "Blog", FileText]] as const).map(([key, label, Icon]) => <button key={key} onClick={() => go({ tab: key, post: null })} aria-current={tab === key ? "page" : undefined} className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[10px] uppercase tracking-[0.17em] transition ${tab === key ? "bg-[#f4f1ea] text-[#4E141D]" : "text-white/60 hover:text-white"}`}><Icon size={13} />{label}</button>)}
+          </nav>
+        </div>
+        <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.17em] text-white/55">
+          {tab === "blog" && <a href="/blog" target="_blank" rel="noopener" className="hidden hover:text-white md:inline">View /blog</a>}
+          <button onClick={signOut} className="border-l border-white/15 pl-4 text-[#C5A059] hover:text-white">Sign out</button>
+        </div>
+      </div>
+    </header>
+    {tab === "blog"
+      ? <main className="mx-auto max-w-[1600px] px-5 py-8 lg:px-10 lg:py-12"><BlogDesk openId={openPost} onOpen={(post) => go({ tab: "blog", post })} /></main>
+      : <LeadFunnel />}
+  </div>;
+}
+
+function LeadFunnel() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<number | null>(null);
@@ -73,24 +118,7 @@ export default function CRM() {
       .catch(() => toast.error("That lead could not be saved"));
   };
 
-  const signOut = () => {
-    void fetch("/api/auth/logout", { method: "POST" }).finally(() => window.location.replace("/login"));
-  };
-
-  return <div className="min-h-screen bg-[#f4f1ea] text-[#4E141D]">
-    <header className="border-b border-[#4E141D]/10 bg-[#4E141D] text-[#f7f3ea]">
-      <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-4 lg:px-10">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#C5A059]/60 text-[10px] tracking-[0.2em] text-[#C5A059]">AA</span>
-          <span><span className="block font-serif text-[17px] tracking-[0.14em]">AAAYAN</span><span className="block text-[8px] uppercase tracking-[0.3em] text-white/45">Lead desk</span></span>
-        </Link>
-        <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.17em] text-white/55">
-          <span className="hidden sm:inline">Commercial workspace</span>
-          <button onClick={signOut} className="border-l border-white/15 pl-4 text-[#C5A059] hover:text-white">Sign out</button>
-        </div>
-      </div>
-    </header>
-
+  return <>
     <main className="mx-auto max-w-[1600px] px-5 py-8 lg:px-10 lg:py-12">
       <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
         <div>
@@ -211,7 +239,7 @@ export default function CRM() {
         <button type="submit" className="mt-7 flex w-full items-center justify-center gap-2 bg-[#4E141D] px-5 py-4 text-[10px] uppercase tracking-[0.18em] text-white hover:bg-[#C5A059] hover:text-[#3D0F17]">Add to funnel <ArrowRight size={14} /></button>
       </form>
     </div>}
-  </div>;
+  </>;
 }
 
 function Metric({ label, value, detail, icon: Icon }: { label: string; value: string; detail: string; icon: typeof CircleDollarSign }) {

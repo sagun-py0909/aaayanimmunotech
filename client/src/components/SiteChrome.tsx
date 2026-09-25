@@ -24,6 +24,7 @@ const navLinks: { href: string; label: string; menu?: { href: string; label: str
   { href: "/products", label: "Products", menu: [{ href: "/products", label: "Full product range" }, ...categories.map((category) => ({ href: `/products/${category.slug}`, label: category.label }))] },
   { href: "/sectors", label: "Sectors", menu: sectors.map((sector) => ({ href: `/sectors/${sector.slug}`, label: sector.title })) },
   { href: "/guides", label: "Buying guides", menu: guideGroups.flatMap((group) => group.slugs).map((slug) => ({ href: `/guides/${slug}`, label: guideLabels[slug] })) },
+  { href: "/blog", label: "Blog" },
   { href: "/support", label: "Support" },
   { href: "/contact", label: "Contact" },
 ];
@@ -75,7 +76,7 @@ export function SiteFooter() {
     { title: "Sectors", links: sectors.map((sector) => ({ href: `/sectors/${sector.slug}`, label: sector.title })) },
     // The legacy equipment pages keep their own URLs and their rankings, so they stay crawlable from every page.
     { title: "Price & supply", links: equipmentPages.map((page) => ({ href: `/equipment/${page.slug}`, label: page.breadcrumb })) },
-    { title: "Company", links: [{ href: "/", label: "Home" }, { href: "/products", label: "Product range" }, { href: "/support", label: "Support" }, { href: "/contact", label: `Contact — ${contact.city}` }] },
+    { title: "Company", links: [{ href: "/", label: "Home" }, { href: "/products", label: "Product range" }, { href: "/blog", label: "Blog" }, { href: "/support", label: "Support" }, { href: "/contact", label: `Contact — ${contact.city}` }] },
   ];
   return <>
     <footer className="bg-[#3D0F17] px-5 pb-10 pt-16 text-white lg:px-16">

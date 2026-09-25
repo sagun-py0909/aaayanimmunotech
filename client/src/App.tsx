@@ -7,6 +7,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { BlogIndex, BlogPostPage } from "./pages/Blog";
 import { EquipmentPage, GuidePage, Guides } from "./pages/ContentPages";
 import Home from "./pages/Home";
 import CRM from "./pages/CRM";
@@ -63,6 +64,8 @@ function Router() {
       <Route path="/sectors/:slug" component={SectorDetail} />
       <Route path="/guides" component={Guides} />
       <Route path="/guides/:slug" component={GuidePage} />
+      <Route path="/blog" component={BlogIndex} />
+      <Route path="/blog/:slug" component={BlogPostPage} />
       <Route path="/support" component={Support} />
       <Route path="/contact" component={Contact} />
       <Route path="/login" component={Login} />

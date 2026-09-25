@@ -1,5 +1,6 @@
 import { catalogue, categories, contact, equipmentPages, guideLabels, guides, plainText, productsForLegacyCategory, sectors, type Product } from "./site";
 import type { Faq } from "./content-types";
+import { categorySlug, htmlToText, wordCount, type PostSummary, type PublicPost } from "./blog";
 
 // Production host is the apex domain — www and http both 301 to it, so every canonical must match.
 export const SITE = "https://aaayanimmunotech.co.in";
@@ -15,6 +16,13 @@ export type SeoEntry = {
   changefreq: "weekly" | "monthly";
   priority: number;
   graph: Record<string, unknown>[];
+  /** Absolute URL for og:image / twitter:image. Defaults to the site image. */
+  image?: string;
+  imageAlt?: string;
+  /** Extra Open Graph properties, e.g. article:published_time. */
+  extraMeta?: { property: string; content: string }[];
+  /** Extra <link> tags, e.g. the blog's RSS feed. */
+  links?: { rel: string; href: string; type?: string; title?: string }[];
 };
 
 type Node = Record<string, unknown>;
@@ -242,7 +250,7 @@ export const legacyRedirects: Record<string, string> = {
   "/suit_product_3.html": "/products/red-light-pbm-therapy-beds",
   "/product_page.html": "/products/red-light-pbm-therapy-beds",
   "/contact.html": "/contact",
-  "/blogs": "/guides",
+  "/blogs": "/blog",
   // The 13 model pages the redesign carried before the catalogue moved to modalities.
   ...Object.fromEntries(Object.entries({
     "oxyl-25": "hyperbaric-oxygen-hbot",
@@ -280,13 +288,14 @@ export function metaTags(entry: SeoEntry): { name?: string; property?: string; c
     { property: "og:title", content: entry.title },
     { property: "og:description", content: entry.description },
     { property: "og:url", content: url },
-    { property: "og:image", content: DEFAULT_IMAGE },
-    { property: "og:image:alt", content: entry.title },
+    { property: "og:image", content: entry.image ?? DEFAULT_IMAGE },
+    { property: "og:image:alt", content: entry.imageAlt || entry.title },
     { property: "og:locale", content: "en_IN" },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: entry.title },
     { name: "twitter:description", content: entry.description },
-    { name: "twitter:image", content: DEFAULT_IMAGE },
+    { name: "twitter:image", content: entry.image ?? DEFAULT_IMAGE },
+    ...(entry.extraMeta ?? []),
   ];
 }
 
@@ -295,13 +304,20 @@ export function headTags(entry: SeoEntry): string {
     `<title>${escapeAttr(entry.title)}</title>`,
     ...metaTags(entry).map((tag) => `<meta ${tag.name ? `name="${tag.name}"` : `property="${tag.property}"`} content="${escapeAttr(tag.content)}" />`),
     ...(entry.noindex ? [] : [`<link rel="canonical" href="${SITE}${entry.path}" />`]),
+    ...(entry.links ?? []).map((link) => `<link rel="${link.rel}" href="${escapeAttr(link.href)}"${link.type ? ` type="${link.type}"` : ""}${link.title ? ` title="${escapeAttr(link.title)}"` : ""} />`),
     ...(entry.graph.length ? [`<script type="application/ld+json" id="seo-jsonld">${jsonLd(entry)}</script>`] : []),
   ];
   return lines.join("\n    ");
 }
 
-export function sitemapXml(lastmod: string): string {
-  const urls = seoEntries.filter((entry) => !entry.noindex).map((entry) => `  <url>\n    <loc>${SITE}${entry.path}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${entry.changefreq}</changefreq>\n    <priority>${entry.priority.toFixed(1)}</priority>\n  </url>`);
+// Built per request: blog posts are runtime data, and scheduled posts join the sitemap when they go live.
+export function sitemapXml(lastmod: string, posts: PostSummary[] = []): string {
+  const url = (path: string, modified: string, changefreq: string, priority: number) => `  <url>\n    <loc>${SITE}${path}</loc>\n    <lastmod>${modified}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority.toFixed(1)}</priority>\n  </url>`;
+  const urls = [
+    ...seoEntries.filter((entry) => !entry.noindex).map((entry) => url(entry.path, lastmod, entry.changefreq, entry.priority)),
+    url("/blog", posts[0]?.updatedAt.slice(0, 10) ?? lastmod, "weekly", 0.7),
+    ...posts.map((post) => url(`/blog/${post.slug}`, post.updatedAt.slice(0, 10), "monthly", 0.6)),
+  ];
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`;
 }
 
@@ -328,3 +344,99 @@ Allow: /
 
 Sitemap: ${SITE}/sitemap.xml
 `;
+
+// ---- Blog ------------------------------------------------------------------------------------
+
+export const BLOG_RSS = `${SITE}/blog/rss.xml`;
+const rssLink = { rel: "alternate", type: "application/rss+xml", title: `${BRAND} blog`, href: BLOG_RSS };
+const absolute = (url: string) => (/^https?:\/\//.test(url) ? url : `${SITE}${url.startsWith("/") ? "" : "/"}${url}`);
+
+export function blogIndexSeo(posts: PostSummary[]): SeoEntry {
+  return {
+    path: "/blog",
+    title: `Wellness Equipment Blog India | ${BRAND}`,
+    description: "Articles from a wellness equipment supplier in India: specifying, installing and running hyperbaric, cryotherapy, red light, float and PEMF rooms.",
+    ogType: "website",
+    changefreq: "weekly",
+    priority: 0.7,
+    links: [rssLink],
+    graph: [
+      webPage("CollectionPage", "/blog", "Blog", { about: { "@id": `${SITE}/#organization` } }),
+      { "@type": "Blog", "@id": `${SITE}/blog#blog`, url: `${SITE}/blog`, name: `${BRAND} blog`, publisher: { "@id": `${SITE}/#organization` }, inLanguage: "en-IN", blogPost: posts.slice(0, 20).map((post) => ({ "@id": `${SITE}/blog/${post.slug}#article` })) },
+      breadcrumb([["Home", "/"], ["Blog", "/blog"]]),
+    ],
+  };
+}
+
+export function blogPostSeo(post: PublicPost, { noindex = false } = {}): SeoEntry {
+  const path = `/blog/${post.slug}`;
+  const image = post.coverImage ? absolute(post.coverImage) : undefined;
+  const description = clamp(post.metaDescription || post.excerpt || htmlToText(post.bodyHtml), 160);
+  return {
+    path,
+    title: post.metaTitle || `${post.title} | ${BRAND}`,
+    description,
+    ogType: "article",
+    noindex,
+    changefreq: "monthly",
+    priority: 0.6,
+    image,
+    imageAlt: post.coverAlt,
+    links: [rssLink],
+    extraMeta: [
+      { property: "article:published_time", content: post.publishAt },
+      { property: "article:modified_time", content: post.updatedAt },
+      { property: "article:section", content: post.category },
+      ...post.tags.map((tag) => ({ property: "article:tag", content: tag })),
+    ],
+    graph: [
+      ORGANIZATION,
+      webPage("WebPage", path, post.title, image ? { primaryImageOfPage: { "@type": "ImageObject", url: image } } : {}),
+      {
+        "@type": "BlogPosting",
+        "@id": `${SITE}${path}#article`,
+        headline: post.title.slice(0, 110),
+        description,
+        ...(image ? { image: [image] } : {}),
+        datePublished: post.publishAt,
+        dateModified: post.updatedAt,
+        author: post.author && post.author !== BRAND ? { "@type": "Person", name: post.author } : { "@id": `${SITE}/#organization` },
+        publisher: { "@id": `${SITE}/#organization` },
+        mainEntityOfPage: { "@id": `${SITE}${path}#webpage` },
+        isPartOf: { "@id": `${SITE}/blog#blog` },
+        articleSection: post.category,
+        ...(post.tags.length ? { keywords: post.tags.join(", ") } : {}),
+        wordCount: wordCount(post.bodyHtml),
+        inLanguage: "en-IN",
+      },
+      breadcrumb([["Home", "/"], ["Blog", "/blog"], [post.title, path]]),
+    ],
+  };
+}
+
+export const blogCategoryPath = (category: string) => `/blog?category=${categorySlug(category)}`;
+
+const xmlEscape = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+export function blogRss(posts: PostSummary[]): string {
+  const items = posts.slice(0, 30).map((post) => `    <item>
+      <title>${xmlEscape(post.title)}</title>
+      <link>${SITE}/blog/${post.slug}</link>
+      <guid isPermaLink="true">${SITE}/blog/${post.slug}</guid>
+      <pubDate>${new Date(post.publishAt).toUTCString()}</pubDate>
+      <category>${xmlEscape(post.category)}</category>
+      <description>${xmlEscape(post.metaDescription || post.excerpt)}</description>
+    </item>`);
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>${xmlEscape(`${BRAND} blog`)}</title>
+    <link>${SITE}/blog</link>
+    <atom:link href="${BLOG_RSS}" rel="self" type="application/rss+xml" />
+    <description>Articles from a wellness equipment supplier in India.</description>
+    <language>en-IN</language>
+${items.join("\n")}
+  </channel>
+</rss>
+`;
+}

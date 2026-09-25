@@ -32,13 +32,16 @@ const parseCookies = (header = "") =>
 const cookie = (token: string, maxAge: number) =>
   `aaayan_session=${token}; HttpOnly; Path=/; SameSite=Strict; Max-Age=${maxAge}${process.env.NODE_ENV === "production" ? "; Secure" : ""}`;
 
-function requireSession(req: express.Request, res: express.Response, next: express.NextFunction) {
+export function hasSession(req: express.Request) {
   const token = parseCookies(req.headers.cookie).aaayan_session;
   const expiresAt = token ? sessions.get(token) : undefined;
-  if (!token || !expiresAt || expiresAt <= Date.now()) {
-    if (token) sessions.delete(token);
-    return res.status(401).json({ error: "Authentication required" });
-  }
+  if (token && expiresAt && expiresAt > Date.now()) return true;
+  if (token) sessions.delete(token);
+  return false;
+}
+
+export function requireSession(req: express.Request, res: express.Response, next: express.NextFunction) {
+  if (!hasSession(req)) return res.status(401).json({ error: "Authentication required" });
   next();
 }
 

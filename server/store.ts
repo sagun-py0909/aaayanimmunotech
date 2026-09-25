@@ -1,13 +1,15 @@
-// Lead storage. A JSON file is enough for one desk on a single always-on server; it is NOT
+// Lead and blog storage. A JSON file is enough for one desk on a single always-on server; it is NOT
 // enough on Vercel, where the filesystem is ephemeral and every request may hit a new instance.
-// Point AAAYAN_DB_PATH at a persistent volume, or swap these four functions for a database,
-// before the desk is used for real leads.
+// Point AAAYAN_DB_PATH at a persistent volume, or swap the read/write functions below for a
+// database, before the desk is used for real leads or the blog is published from it.
 import fs from "fs";
 import path from "path";
 import { z } from "zod";
+import { blogCategories, slugPattern, type Post } from "../shared/blog";
 import { seedLeads, stages, type Lead } from "../shared/lead-desk";
+import { catalogue } from "../shared/site";
 
-type Database = { leads: Lead[] };
+type Database = { leads: Lead[]; posts: Post[] };
 
 const databasePath = process.env.AAAYAN_DB_PATH || path.resolve(process.cwd(), "server/data/lead-desk.json");
 
@@ -72,13 +74,13 @@ export function leadFromEnquiry(enquiry: Enquiry): Omit<Lead, "id"> {
 }
 
 function readDatabase(): Database {
-  if (!fs.existsSync(databasePath)) return { leads: seedLeads };
+  if (!fs.existsSync(databasePath)) return { leads: seedLeads, posts: [] };
   try {
     const parsed = JSON.parse(fs.readFileSync(databasePath, "utf8")) as Partial<Database>;
-    return { leads: Array.isArray(parsed.leads) ? parsed.leads : seedLeads };
+    return { leads: Array.isArray(parsed.leads) ? parsed.leads : seedLeads, posts: Array.isArray(parsed.posts) ? parsed.posts : [] };
   } catch {
     // A corrupt file must not take the desk down; the seed rows are obvious enough to notice.
-    return { leads: seedLeads };
+    return { leads: seedLeads, posts: [] };
   }
 }
 
@@ -106,4 +108,79 @@ export function updateLead(id: number, patch: Partial<Lead>) {
   database.leads[index] = { ...database.leads[index], ...patch, id };
   writeDatabase(database);
   return database.leads[index];
+}
+
+// ---- Blog posts -------------------------------------------------------------------------------
+
+const imagePath = z.string().trim().max(500).refine((value) => value === "" || value.startsWith("/") || /^https:\/\//.test(value), "Use a /path or an https:// URL");
+
+// Everything a draft may hold. Only the title is required until the post is published.
+export const postInputSchema = z.object({
+  title: z.string().trim().min(1).max(160),
+  slug: z.string().trim().max(90).regex(slugPattern, "Lowercase letters, numbers and hyphens only"),
+  metaTitle: z.string().trim().max(90).default(""),
+  metaDescription: z.string().trim().max(220).default(""),
+  excerpt: z.string().trim().max(400).default(""),
+  bodyHtml: z.string().max(300_000).default(""),
+  coverImage: imagePath.default(""),
+  coverAlt: z.string().trim().max(200).default(""),
+  category: z.enum(blogCategories).default("Buying guides"),
+  tags: z.array(z.string().trim().min(1).max(40)).max(12).default([]),
+  relatedProducts: z.array(z.enum(catalogue.map((product) => product.id) as [string, ...string[]])).max(4).default([]),
+  author: z.string().trim().max(80).default("AAAyan Immunotech"),
+  status: z.enum(["draft", "published"]).default("draft"),
+  publishAt: z.string().datetime({ offset: true }).nullable().default(null),
+});
+
+export type PostInput = z.infer<typeof postInputSchema>;
+
+export const listPosts = () => readDatabase().posts;
+
+export const findPost = (id: number) => readDatabase().posts.find((post) => post.id === id);
+
+/** A post by its current slug, or by a slug it used to have (the caller 301s those). */
+export function findPostBySlug(slug: string) {
+  const { posts } = readDatabase();
+  const current = posts.find((post) => post.slug === slug);
+  if (current) return { post: current, moved: false };
+  const renamed = posts.find((post) => post.previousSlugs.includes(slug));
+  return renamed ? { post: renamed, moved: true } : null;
+}
+
+export class SlugTakenError extends Error {}
+
+export function createPost(input: PostInput) {
+  const database = readDatabase();
+  if (database.posts.some((post) => post.slug === input.slug)) throw new SlugTakenError(input.slug);
+  for (const other of database.posts) other.previousSlugs = other.previousSlugs.filter((slug) => slug !== input.slug);
+  const now = new Date().toISOString();
+  const created: Post = { ...input, id: Math.max(Date.now(), ...database.posts.map((post) => post.id + 1)), createdAt: now, updatedAt: now, previousSlugs: [] };
+  database.posts.unshift(created);
+  writeDatabase(database);
+  return created;
+}
+
+export function updatePost(id: number, input: PostInput) {
+  const database = readDatabase();
+  const index = database.posts.findIndex((post) => post.id === id);
+  if (index < 0) return null;
+  if (database.posts.some((post) => post.id !== id && post.slug === input.slug)) throw new SlugTakenError(input.slug);
+  const existing = database.posts[index];
+  // A slug a post once went live under keeps redirecting; a draft's old slugs were never public.
+  const wasPublic = existing.status === "published";
+  const previousSlugs = existing.slug !== input.slug && wasPublic ? Array.from(new Set([...existing.previousSlugs, existing.slug])).filter((slug) => slug !== input.slug) : existing.previousSlugs.filter((slug) => slug !== input.slug);
+  // Another post that is renamed onto a slug this post used to hold takes that URL over.
+  for (const other of database.posts) if (other.id !== id) other.previousSlugs = other.previousSlugs.filter((slug) => slug !== input.slug);
+  database.posts[index] = { ...existing, ...input, id, previousSlugs, updatedAt: new Date().toISOString() };
+  writeDatabase(database);
+  return database.posts[index];
+}
+
+export function deletePost(id: number) {
+  const database = readDatabase();
+  const before = database.posts.length;
+  database.posts = database.posts.filter((post) => post.id !== id);
+  if (database.posts.length === before) return false;
+  writeDatabase(database);
+  return true;
 }

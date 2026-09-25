@@ -215,6 +215,11 @@ function buildEntries(): SeoEntry[] {
     },
   );
 
+  // The private lead desk: served like any other route, but never indexed and never in the sitemap.
+  for (const [path, title] of [["/login", "Lead desk sign in"], ["/crm", "Lead desk"]] as const) {
+    entries.push({ path, title: `${title} | ${BRAND}`, description: "Private workspace.", ogType: "website", noindex: true, changefreq: "monthly", priority: 0, graph: [] });
+  }
+
   return entries;
 }
 
@@ -306,6 +311,9 @@ export const robotsTxt = `# robots.txt — ${BRAND}
 
 User-agent: *
 Allow: /
+Disallow: /crm
+Disallow: /login
+Disallow: /api/
 
 # AI / LLM crawlers — allowed by default.
 # Switch Allow to Disallow if the brand does not want its catalogue used for model training.

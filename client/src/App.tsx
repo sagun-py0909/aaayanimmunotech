@@ -3,12 +3,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { applySeo } from "@/lib/seo";
 import NotFound from "@/pages/NotFound";
 import { legacyRedirects } from "@shared/seo";
-import { useEffect } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { EquipmentPage, GuidePage, Guides } from "./pages/ContentPages";
 import Home from "./pages/Home";
+import CRM from "./pages/CRM";
+import Login from "./pages/Login";
 import { Contact, ProductDetail, Support } from "./pages/Pages";
 import Products from "./pages/Products";
 import { SectorDetail, Sectors } from "./pages/Sectors";
@@ -35,6 +37,21 @@ function RouteEffects() {
   return null;
 }
 
+// The lead desk checks the session with the server rather than trusting anything in the browser.
+function PrivateRoute({ children }: { children: ReactNode }) {
+  const [status, setStatus] = useState<"loading" | "authenticated" | "anonymous">("loading");
+  useEffect(() => {
+    fetch("/api/auth/session").then((response) => setStatus(response.ok ? "authenticated" : "anonymous")).catch(() => setStatus("anonymous"));
+  }, []);
+  useEffect(() => {
+    if (status === "anonymous") window.location.replace("/login");
+  }, [status]);
+  if (status !== "authenticated") return <div className="min-h-screen bg-[#4E141D]" />;
+  return <>{children}</>;
+}
+
+const PrivateCRM = () => <PrivateRoute><CRM /></PrivateRoute>;
+
 function Router() {
   return (
     <Switch>
@@ -48,6 +65,8 @@ function Router() {
       <Route path="/guides/:slug" component={GuidePage} />
       <Route path="/support" component={Support} />
       <Route path="/contact" component={Contact} />
+      <Route path="/login" component={Login} />
+      <Route path="/crm" component={PrivateCRM} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

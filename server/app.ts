@@ -1,4 +1,5 @@
 import express from "express";
+import { mountLeadDesk } from "./lead-desk-api";
 import { headTags, legacyRedirects, notFoundSeo, robotsTxt, seoForPath, sitemapXml } from "../shared/seo";
 
 type AppOptions = {
@@ -24,6 +25,9 @@ export function createApp({ template, staticDir }: AppOptions) {
   app.get("/robots.txt", (_req, res) => {
     res.type("text/plain").send(robotsTxt);
   });
+
+  // The private lead desk. Mounted before the static files and the SPA catch-all.
+  mountLeadDesk(app);
 
   app.get("/sitemap.xml", (_req, res) => {
     res.type("application/xml").send(sitemapXml(lastmod));

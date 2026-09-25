@@ -164,7 +164,7 @@ export function ProductCard({ product, index, selected = false, onToggle }: { pr
       {onToggle && <button onClick={onToggle} aria-label={`${selected ? "Remove" : "Add"} ${product.name} ${selected ? "from" : "to"} shortlist`} className={`absolute bottom-4 right-4 flex items-center gap-2 rounded-full px-3 py-2 text-[9px] uppercase tracking-[0.12em] transition ${selected ? "bg-[#C5A059] text-[#4E141D]" : "bg-[#4E141D]/75 text-white hover:bg-[#C5A059] hover:text-[#4E141D]"}`}>{selected ? <Check size={13} /> : <Plus size={13} />} {selected ? "Shortlisted" : "Shortlist"}</button>}
     </div>
     <div className="pt-5">
-      <div className="flex items-center justify-between gap-3 text-[9px] uppercase tracking-[0.18em]"><span className="text-[#C5A059]">{product.type}</span><span className="shrink-0 text-right text-[#777067]">{product.headline}</span></div>
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-[9px] uppercase tracking-[0.18em]"><span className="text-[#C5A059]">{product.type}</span><span className="text-[#777067]">{product.headline}</span></div>
       <h3 className="mt-3 font-serif text-[27px] leading-[1.02] tracking-[-0.02em]"><Link href={`/products/${product.id}`}>{product.name}</Link></h3>
       <p className="mt-4 text-xs leading-5 text-[#6f6a61]">{product.description}</p>
       <div className="mt-5 flex items-center justify-between border-t border-[#4E141D]/12 pt-4"><span className="text-[10px] uppercase tracking-[0.13em] text-[#777067]">On quotation</span><Link href={`/products/${product.id}`} className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.15em] transition hover:text-[#C5A059]">View system <ArrowRight size={14} /></Link></div>

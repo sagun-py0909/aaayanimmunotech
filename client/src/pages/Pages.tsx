@@ -177,6 +177,6 @@ export function ProductDetail() {
       </div>
     </section>
 
-    {related.length > 0 && <section className="mt-24"><div className="mb-10 flex items-end justify-between border-b border-[#4E141D]/15 pb-5"><h2 className="font-serif text-4xl">Completes the circuit</h2><Link href="/products" className="text-[10px] uppercase tracking-[0.18em]">Full range</Link></div><div className="grid gap-x-6 gap-y-14 md:grid-cols-2 xl:grid-cols-3">{related.map((item, index) => <ProductCard key={item.id} product={item} index={index} />)}</div></section>}
+    {related.length > 0 && <section className="mt-24"><div className="mb-10 flex items-end justify-between border-b border-[#4E141D]/15 pb-5"><h2 className="font-serif text-4xl">Completes the circuit</h2><Link href="/products" className="text-[10px] uppercase tracking-[0.18em]">Full range</Link></div><div className="grid gap-x-6 gap-y-14 md:grid-cols-2 xl:grid-cols-3">{related.map((item) => <ProductCard key={item.id} product={item} />)}</div></section>}
   </main><SiteFooter /></div>;
 }

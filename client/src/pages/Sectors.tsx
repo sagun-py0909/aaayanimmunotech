@@ -81,7 +81,7 @@ export function SectorDetail() {
             <div><div className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#8a7657]">Recommended systems / 02</div><h2 className="max-w-[760px] font-serif text-[clamp(2.6rem,4.6vw,5rem)] leading-[.92] tracking-[-0.04em]">The right circuit for <em className="font-light text-[#C5A059]">{sector.title.toLowerCase()}.</em></h2></div>
             <Link href="/products" className="inline-flex w-fit items-center gap-2 border-b border-[#4E141D] pb-2 text-[10px] uppercase tracking-[0.18em]">View full range <ArrowRight size={14} /></Link>
           </div>
-          <div className="mt-12 grid gap-x-6 gap-y-14 md:grid-cols-2 xl:grid-cols-4">{recommended.map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}</div>
+          <div className="mt-12 grid gap-x-6 gap-y-14 md:grid-cols-2 xl:grid-cols-4">{recommended.map((product) => <ProductCard key={product.id} product={product} />)}</div>
         </div>
       </section>
 

@@ -62,7 +62,7 @@ function ContentLayout({ page, section, sectionHref, image, products }: { page: 
       {products.length > 0 && <section className="bg-[#e9e4da] px-5 py-20 lg:px-16">
         <div className="mx-auto max-w-[1440px]">
           <div className="mb-10 flex flex-col justify-between gap-6 border-b border-[#4E141D]/15 pb-8 lg:flex-row lg:items-end"><div><div className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#8a7657]">Models in this category</div><h2 className="font-serif text-[clamp(2.2rem,3.6vw,3.8rem)] leading-[.95] tracking-[-0.03em]">{products.length} system{products.length > 1 ? "s" : ""}, <em className="font-light text-[#C5A059]">ready to specify.</em></h2></div><Link href="/products" className="inline-flex w-fit items-center gap-2 border-b border-[#4E141D] pb-2 text-[10px] uppercase tracking-[0.18em]">Full product range <ArrowRight size={14} /></Link></div>
-          <div className="grid gap-x-6 gap-y-14 md:grid-cols-2 xl:grid-cols-3">{products.map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}</div>
+          <div className="grid gap-x-6 gap-y-14 md:grid-cols-2 xl:grid-cols-3">{products.map((product) => <ProductCard key={product.id} product={product} />)}</div>
         </div>
       </section>}
 

@@ -86,12 +86,12 @@ export function ProductDetail() {
   return <div className="min-h-screen bg-[#f4f1ea] text-[#4E141D]"><SiteHeader /><main className="mx-auto max-w-[1440px] px-5 pb-24 pt-32 lg:px-16">
     <nav aria-label="Breadcrumb" className="mb-8 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[#8a7657]"><Link href="/">Home</Link><span>/</span><Link href="/products">Products</Link><span>/</span><span>{product.name}</span></nav>
 
-    <div className="grid gap-12 lg:grid-cols-[1.05fr_.95fr] lg:items-start">
+    <div className="grid gap-12 lg:grid-cols-[3fr_2fr] lg:items-start">
       <div className="lg:sticky lg:top-28">
-        <div className="group relative overflow-hidden rounded-[28px] border border-[#4E141D]/10 bg-[#ebe7de] p-5 shadow-[0_16px_45px_rgba(46,10,16,0.08)] sm:p-7">
+        <div className="group relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[28px] border border-[#4E141D]/10 bg-[#ebe7de] p-5 shadow-[0_16px_45px_rgba(46,10,16,0.08)] sm:p-7">
           <div className="pointer-events-none absolute left-5 top-5 h-14 w-14 rounded-tl-2xl border-l border-t border-[#C5A059]/35" />
           <div className="pointer-events-none absolute bottom-5 right-5 h-14 w-14 rounded-br-2xl border-b border-r border-[#C5A059]/35" />
-          <img src={product.image} alt={`${product.name} — ${product.type}`} className="mx-auto max-h-[520px] w-[88%] object-contain drop-shadow-[0_18px_22px_rgba(0,0,0,0.12)] transition duration-500 group-hover:scale-[1.015]" />
+          <img src={product.image} alt={`${product.name} — ${product.type}`} className="h-full w-full object-contain drop-shadow-[0_18px_22px_rgba(46,10,16,0.12)] transition duration-500 group-hover:scale-[1.015]" />
           {product.badge && <span className="absolute right-7 top-7 rounded-full bg-[#C5A059] px-3 py-1.5 text-[9px] uppercase tracking-[0.14em] text-[#4E141D] shadow-sm">{product.badge}</span>}
         </div>
         <div className="mt-5 flex flex-wrap gap-3">

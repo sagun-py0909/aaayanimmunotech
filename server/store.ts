@@ -6,10 +6,15 @@ import fs from "fs";
 import path from "path";
 import { z } from "zod";
 import { blogCategories, slugPattern, type Post } from "../shared/blog";
+import { seedPosts as shippedPosts } from "../shared/blog-posts";
 import { seedLeads, stages, type Lead } from "../shared/lead-desk";
 import { catalogue } from "../shared/site";
+import { sanitizePostHtml } from "./sanitize";
 
 type Database = { leads: Lead[]; posts: Post[] };
+
+// Cleaned by the same rules as a desk save, so shipped posts render exactly like saved ones.
+const seedPosts: Post[] = shippedPosts.map((post) => ({ ...post, bodyHtml: sanitizePostHtml(post.bodyHtml) }));
 
 const databasePath = process.env.AAAYAN_DB_PATH || path.resolve(process.cwd(), "server/data/lead-desk.json");
 
@@ -74,13 +79,13 @@ export function leadFromEnquiry(enquiry: Enquiry): Omit<Lead, "id"> {
 }
 
 function readDatabase(): Database {
-  if (!fs.existsSync(databasePath)) return { leads: seedLeads, posts: [] };
+  if (!fs.existsSync(databasePath)) return { leads: seedLeads, posts: seedPosts };
   try {
     const parsed = JSON.parse(fs.readFileSync(databasePath, "utf8")) as Partial<Database>;
-    return { leads: Array.isArray(parsed.leads) ? parsed.leads : seedLeads, posts: Array.isArray(parsed.posts) ? parsed.posts : [] };
+    return { leads: Array.isArray(parsed.leads) ? parsed.leads : seedLeads, posts: Array.isArray(parsed.posts) ? parsed.posts : seedPosts };
   } catch {
     // A corrupt file must not take the desk down; the seed rows are obvious enough to notice.
-    return { leads: seedLeads, posts: [] };
+    return { leads: seedLeads, posts: seedPosts };
   }
 }
 

@@ -1,10 +1,11 @@
 import { ArrowRight, Check, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Link, useRoute, useSearch } from "wouter";
 import { motion } from "framer-motion";
 import { PageShell, ProductCard, SiteFooter, SiteHeader, pad } from "@/components/SiteChrome";
 import { catalogue, categories, contact, guideLabels, sectors } from "@/data/site";
+import { enquiryFromForm, sendEnquiry } from "@/lib/enquiry";
 import NotFound from "./NotFound";
 
 export function Support() {
@@ -23,10 +24,20 @@ export function Support() {
 
 export function Contact() {
   const search = useSearch();
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const [sending, setSending] = useState(false);
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    toast.success("Enquiry sent", { description: "A specialist will be in touch shortly." });
-    event.currentTarget.reset();
+    const form = event.currentTarget;
+    setSending(true);
+    try {
+      await sendEnquiry(enquiryFromForm(form));
+      toast.success("Enquiry sent", { description: "A specialist will be in touch shortly." });
+      form.reset();
+    } catch (error) {
+      toast.error(error instanceof Error && error.message === "rate-limited" ? "Too many enquiries from here. Please email or WhatsApp us." : "That enquiry did not send. Please email or WhatsApp us.");
+    } finally {
+      setSending(false);
+    }
   };
   // A "Request a quotation" button on a product page arrives with ?product=<id>, so the form opens on that system.
   const requested = catalogue.find((item) => item.id === new URLSearchParams(search).get("product"));
@@ -46,17 +57,20 @@ export function Contact() {
     </div>
     <form onSubmit={submit} className="bg-[#e9e4da] p-6 sm:p-10">
       <div className="grid gap-6 sm:grid-cols-2">
-        <label className="text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Name<input required className={fieldClass} placeholder="Full name" /></label>
-        <label className="text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Work email<input required type="email" className={fieldClass} placeholder="you@company.com" /></label>
-        <label className="text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Organisation<input className={fieldClass} placeholder="Organisation or institution" /></label>
-        <label className="text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">City<input className={fieldClass} placeholder="Project location" /></label>
+        <label className="text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Name<input name="name" required className={fieldClass} placeholder="Full name" /></label>
+        <label className="text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Work email<input name="email" required type="email" className={fieldClass} placeholder="you@company.com" /></label>
+        <label className="text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Organisation<input name="company" className={fieldClass} placeholder="Organisation or institution" /></label>
+        <label className="text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">City<input name="city" className={fieldClass} placeholder="Project location" /></label>
+        <label className="text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Phone<input name="phone" type="tel" className={fieldClass} placeholder="Optional, for a faster reply" /></label>
       </div>
       <div className="mt-7 grid gap-6 sm:grid-cols-2">
-        <label className="block text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Sector<select className={fieldClass}>{sectors.map((sector) => <option key={sector.slug}>{sector.title}</option>)}<option>Exploring options</option></select></label>
-        <label className="block text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Products of interest<select className={fieldClass} defaultValue={requested?.name}>{catalogue.map((product) => <option key={product.id}>{product.name}</option>)}<option>Full recovery circuit</option></select></label>
+        <label className="block text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Sector<select name="sector" className={fieldClass}>{sectors.map((sector) => <option key={sector.slug}>{sector.title}</option>)}<option>Exploring options</option></select></label>
+        <label className="block text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Products of interest<select name="interest" className={fieldClass} defaultValue={requested?.name}>{catalogue.map((product) => <option key={product.id}>{product.name}</option>)}<option>Full recovery circuit</option></select></label>
       </div>
-      <label className="mt-7 block text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Tell us about your site<textarea className={`${fieldClass} min-h-[150px] resize-none`} placeholder="Room dimensions, power availability, expected session volume, timeline..." /></label>
-      <button className="mt-8 inline-flex items-center gap-3 bg-[#4E141D] px-5 py-4 text-[10px] uppercase tracking-[0.18em] text-white transition hover:bg-[#C5A059]">Send enquiry <ArrowRight size={14} /></button>
+      <label className="mt-7 block text-[10px] uppercase tracking-[0.16em] text-[#6f6a61]">Tell us about your site<textarea name="message" className={`${fieldClass} min-h-[150px] resize-none`} placeholder="Room dimensions, power availability, expected session volume, timeline..." /></label>
+      {/* Honeypot: hidden from people, tempting to bots. */}
+      <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+      <button type="submit" disabled={sending} className="mt-8 inline-flex items-center gap-3 bg-[#4E141D] px-5 py-4 text-[10px] uppercase tracking-[0.18em] text-white transition hover:bg-[#C5A059] disabled:opacity-60">{sending ? "Sending…" : "Send enquiry"} <ArrowRight size={14} /></button>
     </form>
   </main><SiteFooter /></div>;
 }

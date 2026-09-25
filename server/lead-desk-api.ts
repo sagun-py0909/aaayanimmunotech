@@ -3,13 +3,17 @@
 // sessions and the store to a database before this runs anywhere but a single always-on server.
 import crypto from "crypto";
 import express from "express";
-import { createLead, leadCreateSchema, leadPatchSchema, listLeads, updateLead } from "./store";
+import { createLead, enquirySchema, leadCreateSchema, leadFromEnquiry, leadPatchSchema, listLeads, updateLead } from "./store";
 
 const sessionLifetime = 8 * 60 * 60 * 1000;
 const loginWindow = 15 * 60 * 1000;
 const loginLimit = 10;
 
+const enquiryWindow = 10 * 60 * 1000;
+const enquiryLimit = 5;
+
 const sessions = new Map<string, number>();
+const enquiryAttempts = new Map<string, { count: number; resetAt: number }>();
 const loginAttempts = new Map<string, { count: number; resetAt: number }>();
 
 // No fallback credentials: with none configured the desk cannot be signed into at all.
@@ -84,6 +88,25 @@ export function mountLeadDesk(app: express.Express) {
     if (!parsed.success) return res.status(400).json({ error: "Invalid lead update", details: parsed.error.flatten() });
     const lead = updateLead(Number(req.params.id), parsed.data);
     return lead ? res.json(lead) : res.status(404).json({ error: "Lead not found" });
+  });
+
+  // The public quotation forms. No session: this is how a visitor becomes a lead.
+  app.post("/api/enquiries", (req, res) => {
+    const address = req.ip || "unknown";
+    const attempt = enquiryAttempts.get(address);
+    if (attempt && attempt.resetAt > Date.now() && attempt.count >= enquiryLimit) return res.status(429).json({ error: "Too many enquiries. Please email us instead." });
+
+    const parsed = enquirySchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: "Invalid enquiry", details: parsed.error.flatten() });
+
+    const current = attempt && attempt.resetAt > Date.now() ? attempt : { count: 0, resetAt: Date.now() + enquiryWindow };
+    enquiryAttempts.set(address, { count: current.count + 1, resetAt: current.resetAt });
+
+    // A filled honeypot is a bot: answer as if it worked, and keep it out of the desk.
+    if (parsed.data.website) return res.status(201).json({ received: true });
+
+    createLead(leadFromEnquiry(parsed.data));
+    return res.status(201).json({ received: true });
   });
 
   // Anything else under /api is not a page; answer as API rather than falling through to the SPA.

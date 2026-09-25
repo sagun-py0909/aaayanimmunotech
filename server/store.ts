@@ -29,6 +29,48 @@ export const leadCreateSchema = z.object({
 
 export const leadPatchSchema = leadCreateSchema.partial();
 
+// What the public forms are allowed to send. Everything else about the lead (stage, owner,
+// source) is decided here, not by the browser.
+export const enquirySchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  email: z.string().trim().email().max(200),
+  company: z.string().trim().max(160).default(""),
+  city: z.string().trim().max(100).default(""),
+  phone: z.string().trim().max(40).default(""),
+  sector: z.string().trim().max(120).default(""),
+  interest: z.string().trim().max(160).default(""),
+  message: z.string().trim().max(2000).default(""),
+  /** Names of shortlisted systems, when the enquiry came from the shortlist drawer. */
+  shortlist: z.array(z.string().trim().max(160)).max(10).default([]),
+  /** Honeypot: a real person never fills this in. */
+  website: z.string().max(200).optional(),
+});
+
+export type Enquiry = z.infer<typeof enquirySchema>;
+
+export function leadFromEnquiry(enquiry: Enquiry): Omit<Lead, "id"> {
+  const interest = enquiry.shortlist.length ? enquiry.shortlist.join(" · ") : enquiry.interest || "Not specified";
+  const note = [enquiry.message, enquiry.sector && `Sector: ${enquiry.sector}`, enquiry.shortlist.length && `Shortlisted: ${enquiry.shortlist.join(", ")}`]
+    .filter(Boolean)
+    .join("\n\n")
+    .slice(0, 2000);
+  return {
+    name: enquiry.name,
+    company: enquiry.company || "—",
+    city: enquiry.city || "—",
+    email: enquiry.email,
+    phone: enquiry.phone,
+    interest,
+    value: 0,
+    stage: "New enquiry",
+    source: "Website enquiry",
+    owner: "Unassigned",
+    nextAction: "Respond to the enquiry",
+    lastContact: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+    note,
+  };
+}
+
 function readDatabase(): Database {
   if (!fs.existsSync(databasePath)) return { leads: seedLeads };
   try {

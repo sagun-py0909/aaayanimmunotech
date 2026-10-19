@@ -118,3 +118,11 @@ handover/
 server/data/
 
 .env*
+
+# Catalogs, raw archive assets, and local tool configs
+*.pdf
+*.zip
+.claude/
+package-lock.json
+PHOTO-*.jpg
+

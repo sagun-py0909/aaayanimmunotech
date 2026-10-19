@@ -79,6 +79,8 @@ export function ProductDetail() {
   const [, params] = useRoute<{ id: string }>("/products/:id");
   const product = catalogue.find((item) => item.id === params?.id);
   if (!product) return <NotFound />;
+  const [activePhoto, setActivePhoto] = useState(0);
+  const images = product.images?.length ? product.images : [product.image];
   const category = categories.find((item) => item.slug === product.categorySlug);
   const suited = sectors.filter((sector) => product.sectors.includes(sector.slug));
   const related = catalogue.filter((item) => item.id !== product.id && item.sectors.some((slug) => product.sectors.includes(slug))).slice(0, 3);
@@ -91,9 +93,12 @@ export function ProductDetail() {
         <div className="group relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[28px] border border-[#4E141D]/10 bg-[#ebe7de] p-5 shadow-[0_16px_45px_rgba(46,10,16,0.08)] sm:p-7">
           <div className="pointer-events-none absolute left-5 top-5 h-14 w-14 rounded-tl-2xl border-l border-t border-[#C5A059]/35" />
           <div className="pointer-events-none absolute bottom-5 right-5 h-14 w-14 rounded-br-2xl border-b border-r border-[#C5A059]/35" />
-          <img src={product.image} alt={`${product.name} — ${product.type}`} className="h-full w-full object-contain drop-shadow-[0_18px_22px_rgba(46,10,16,0.12)] transition duration-500 group-hover:scale-[1.015]" />
+          <img src={images[activePhoto] ?? product.image} alt={`${product.name} — ${product.type}`} className="h-full w-full object-contain drop-shadow-[0_18px_22px_rgba(46,10,16,0.12)] transition duration-500 group-hover:scale-[1.015]" />
           {product.badge && <span className="absolute right-7 top-7 rounded-full bg-[#C5A059] px-3 py-1.5 text-[9px] uppercase tracking-[0.14em] text-[#4E141D] shadow-sm">{product.badge}</span>}
         </div>
+        {images.length > 1 && <div className="mt-4 flex flex-wrap gap-2.5">
+          {images.map((src, index) => <button key={src} onClick={() => setActivePhoto(index)} aria-label={`Show ${product.name} photo ${index + 1}`} aria-pressed={activePhoto === index} className={`h-16 w-16 overflow-hidden rounded-xl border bg-[#ebe7de] p-1 transition ${activePhoto === index ? "border-[#C5A059] ring-2 ring-[#C5A059]/50" : "border-[#4E141D]/10 opacity-70 hover:opacity-100"}`}><img src={src} alt="" loading="lazy" className="h-full w-full object-contain" /></button>)}
+        </div>}
         <div className="mt-5 flex flex-wrap gap-3">
           <Link href={quoteHref} className="inline-flex flex-1 items-center justify-center gap-3 bg-[#4E141D] px-5 py-4 text-[10px] uppercase tracking-[0.18em] text-white transition hover:bg-[#C5A059]">Request a quotation <ArrowRight size={14} /></Link>
           <a href={contact.whatsapp} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 border border-[#4E141D]/25 px-5 py-4 text-[10px] uppercase tracking-[0.18em] transition hover:border-[#C5A059] hover:text-[#C5A059]"><MessageCircle size={14} /> WhatsApp</a>

@@ -35,63 +35,13 @@ const galleryPhotos: Record<string, string[]> = {
 };
 const productGallery: Record<string, string[]> = {
   "infrared-sauna": ["/images/products/infrared-sauna-2.jpg"],
-  "hyperbaric-oxygen-hbot": [
-    "/images/products/hyperbaric-oxygen-hbot-2.jpg",
-    "/images/products/hbo2-1.webp",
-    "/images/products/hbo2-2.webp",
-    "/images/products/hbo2-3.webp",
-    "/images/products/hbo2-4.webp",
-    "/images/products/diamond-5000-1.webp",
-    "/images/products/diamond-5000-2.webp",
-    "/images/products/diamond-5000-3.webp",
-    "/images/products/hp2202-1.webp",
-    "/images/products/hp2202-2.webp",
-    "/images/products/hp2202-3.webp",
-    "/images/products/hp1501-1.webp",
-    "/images/products/hp1501-2.webp",
-    "/images/products/dia90-1.webp",
-    "/images/products/dia90-2.webp",
-    "/images/products/dia90-3.webp",
-    "/images/products/mc4000-1.webp",
-    "/images/products/mc4000-2.webp",
-    "/images/products/mc4000-3.webp",
-    "/images/products/l1-1.webp",
-    "/images/products/l1-2.webp",
-    "/images/products/l1-3.webp",
-    "/images/products/st2200-1.webp",
-    "/images/products/st2200-2.webp",
-    "/images/products/st2200-3.webp",
-    "/images/products/st1700-1.webp",
-    "/images/products/st1700-2.webp",
-    "/images/products/st801-1.webp",
-  ],
-  "dry-float-beds": [
-    "/images/products/dry-float-beds-2.jpg",
-    "/images/products/noah-1.webp",
-    "/images/products/noah-2.webp",
-    "/images/products/noah-3.webp",
-  ],
-  "float-tanks-wet": [
-    "/images/products/float-tanks-wet-2.jpg",
-    "/images/products/whalepod-1.webp",
-    "/images/products/relaxpod-1.webp",
-    "/images/products/relaxpod-2.webp",
-  ],
+  "hyperbaric-oxygen-hbot": ["/images/products/hyperbaric-oxygen-hbot-2.jpg"],
+  "dry-float-beds": ["/images/products/dry-float-beds-2.jpg"],
+  "float-tanks-wet": ["/images/products/float-tanks-wet-2.jpg"],
   "pemf": ["/images/products/pemf-2.jpg"],
   "red-light-pbm-therapy-beds": ["/images/products/red-light-pbm-therapy-beds-2.jpg"],
-  "localized-cryotherapy-chillers": [
-    "/images/products/localized-cryotherapy-chillers-2.jpg",
-    "/images/products/cold-plunge-1.webp",
-    "/images/products/cold-plunge-2.webp",
-    "/images/products/cold-plunge-3.webp",
-  ],
-  "whole-body-cryotherapy-chambers": [
-    "/images/products/whole-body-cryotherapy-chambers-2.jpg",
-    "/images/products/aurora-electric-1.webp",
-    "/images/products/aurora-electric-2.webp",
-    "/images/products/aurora-nitrogen-1.webp",
-    "/images/products/aurora-portable-1.webp",
-  ],
+  "localized-cryotherapy-chillers": ["/images/products/localized-cryotherapy-chillers-2.jpg"],
+  "whole-body-cryotherapy-chambers": ["/images/products/whole-body-cryotherapy-chambers-2.jpg"],
 };
 
 export const plainText = (html: string) => html.replace(/<br\s*\/?>/g, " ").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
@@ -317,6 +267,44 @@ export const catalogue: Product[] = [
     sectors: ["sports-performance", "gyms-spas-hotels", "clinical-medical"],
   }),
 ];
+
+// Individual models: photos and a one-line description only, filed under their category.
+const model = (id: string, name: string, category: string, description: string, photos: string[]): Product => {
+  const parent = catalogue.find((item) => item.category === category);
+  const images = photos.map((name) => `/images/products/${name}.webp`);
+  return {
+    id, name, category, description,
+    type: parent?.type ?? category,
+    categorySlug: parent?.categorySlug ?? "",
+    headline: category,
+    specs: [], features: [], gains: [],
+    image: images[0], images, gallery: images,
+    sectors: parent?.sectors ?? [],
+  };
+};
+
+const hbot = "Hyperbaric Oxygen / HBOT";
+const wholeCryo = "Whole Body Cryotherapy Chambers";
+
+catalogue.push(
+  model("hbo2", "HBO2 Seated Chamber", hbot, "Two-seat hard-shell chamber with reclining leather seats.", ["hbo2-1", "hbo2-2", "hbo2-3", "hbo2-4"]),
+  model("diamond-5000", "He5000 Diamond", hbot, "Walk-in drum chamber built to sit in a living space.", ["diamond-5000-1", "diamond-5000-2", "diamond-5000-3"]),
+  model("hp2202", "Macy-Pan HP2202", hbot, "Hard-shell lying chamber with a full-length viewing canopy.", ["hp2202-1", "hp2202-2", "hp2202-3"]),
+  model("hp1501", "Macy-Pan HP1501", hbot, "Silver hard-shell lying chamber for recovery centres.", ["hp1501-1", "hp1501-2"]),
+  model("dia90", "Macy-Pan Diamond 90", hbot, "Wide-bore hard-shell lying chamber in gloss black.", ["dia90-1", "dia90-2", "dia90-3"]),
+  model("mc4000", "Macy-Pan MC4000", hbot, "Seated soft-shell chamber for two, wheelchair accessible.", ["mc4000-1", "mc4000-2", "mc4000-3"]),
+  model("l1", "Macy-Pan L1", hbot, "Compact upright soft-shell chamber.", ["l1-1", "l1-2", "l1-3"]),
+  model("st2200", "Macy-Pan ST2200", hbot, "Large soft-shell chamber to sit or lie in.", ["st2200-1", "st2200-2", "st2200-3"]),
+  model("st1700", "Macy-Pan ST1700", hbot, "Shorter soft-shell chamber to sit or lie in.", ["st1700-1", "st1700-2"]),
+  model("st801", "Macy-Pan ST801", hbot, "Classic tubular soft-shell lying chamber.", ["st801-1"]),
+  model("aurora-electric", "Aurora Electric Cryo Chamber", wholeCryo, "Nitrogen-free electric cryotherapy chamber.", ["aurora-electric-1", "aurora-electric-2"]),
+  model("aurora-nitrogen", "Aurora Nitrogen Cryo Chamber", wholeCryo, "Single-person liquid nitrogen cryotherapy cabin.", ["aurora-nitrogen-1"]),
+  model("aurora-portable", "Aurora Portable Cryo Chamber", wholeCryo, "Inflatable cryotherapy chamber that packs into a suitcase.", ["aurora-portable-1"]),
+  model("cold-plunge", "Cold Plunge Tubs", "Localized Cryotherapy & Chillers", "Chilled, filtered plunge tubs in white or black.", ["cold-plunge-1", "cold-plunge-2", "cold-plunge-3"]),
+  model("whalepod", "Whalepod Float Pod", "Wet Float Tanks", "Smart floatation pod.", ["whalepod-1"]),
+  model("relaxpod", "Relaxpod Float Tank", "Wet Float Tanks", "Commercial float tank.", ["relaxpod-1", "relaxpod-2"]),
+  model("noah", "Noah Dry Hydro-Massage Bed", "Dry Float Beds", "Hot and cold dry water-massage bed.", ["noah-1", "noah-2", "noah-3"]),
+);
 
 
 const sectorMeta = [

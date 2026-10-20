@@ -33,14 +33,26 @@ export default function Home() {
       <main id="top">
         <HeroCarousel onExplore={() => navigate("/products")} onEnquire={() => setEnquiryOpen(true)} />
 
-        <StatsStrip />
+        <section id="catalogue" className="scroll-mt-20 bg-[#f4f1ea] px-5 py-20 lg:px-16 lg:py-28">
+          <div className="mx-auto max-w-[1440px]">
+            <div className="border-b border-[#4E141D]/15 pb-9">
+              <div className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#8a7657]">The collection / 01</div>
+              <h2 className="max-w-[660px] font-serif text-[clamp(2.8rem,5vw,5.5rem)] leading-[.92] tracking-[-0.04em]">Built for <em className="font-light">better</em> recovery.</h2>
+              <p className="mt-5 max-w-[540px] text-sm leading-6 text-[#5f5b53]">Hyperbaric chambers, cryotherapy, red light, floatation and sauna systems for a complete recovery environment. Shortlist up to three and request a quotation.</p>
+            </div>
+            <div className="mt-12 grid gap-x-5 gap-y-14 md:grid-cols-2 xl:grid-cols-3">
+              {featuredProducts.map((product, index) => <ProductCard key={product.id} product={product} index={index} selected={shortlist.includes(product.id)} onToggle={() => toggleShortlist(product.id)} />)}
+            </div>
+            <div className="mt-16 flex justify-center"><Link href="/products" className="inline-flex items-center gap-3 bg-[#4E141D] px-6 py-4 text-[10px] uppercase tracking-[0.18em] text-white transition hover:bg-[#C5A059]">View all products <ArrowRight size={14} /></Link></div>
+          </div>
+        </section>
 
-        <GalleryCarousel />
+        <StatsStrip />
 
         <section id="sectors" className="scroll-mt-20 bg-[#4E141D] px-5 py-20 text-[#f6f1e8] lg:px-16 lg:py-28">
           <div className="mx-auto max-w-[1440px]">
             <div className="grid gap-12 lg:grid-cols-[.82fr_1.18fr] lg:items-end">
-              <div><div className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#C5A059]">Sectors / 01</div><h2 className="font-serif text-[clamp(2.8rem,5vw,5.5rem)] leading-[.9] tracking-[-0.04em]">One standard.<br /><em className="font-light text-[#C5A059]">Five environments.</em></h2></div>
+              <div><div className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#C5A059]">Sectors / 02</div><h2 className="font-serif text-[clamp(2.8rem,5vw,5.5rem)] leading-[.9] tracking-[-0.04em]">One standard.<br /><em className="font-light text-[#C5A059]">Five environments.</em></h2></div>
               <p className="max-w-[540px] text-sm leading-7 text-white/55 lg:justify-self-end">From a hospital HBOT unit to a hotel spa, a squad recovery room or a private residence — we specify the right products, footprint and support model for the space you are building.</p>
             </div>
             <div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-6">
@@ -53,19 +65,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="catalogue" className="scroll-mt-20 bg-[#f4f1ea] px-5 py-20 lg:px-16 lg:py-28">
-          <div className="mx-auto max-w-[1440px]">
-            <div className="border-b border-[#4E141D]/15 pb-9">
-              <div className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#8a7657]">The collection / 02</div>
-              <h2 className="max-w-[660px] font-serif text-[clamp(2.8rem,5vw,5.5rem)] leading-[.92] tracking-[-0.04em]">Built for <em className="font-light">better</em> recovery.</h2>
-              <p className="mt-5 max-w-[540px] text-sm leading-6 text-[#5f5b53]">Hyperbaric chambers, cryotherapy chambers and photobiomodulation beds that anchor a complete recovery environment. Shortlist up to three and request a quotation.</p>
-            </div>
-            <div className="mt-12 grid gap-x-5 gap-y-14 md:grid-cols-2 xl:grid-cols-3">
-              {featuredProducts.map((product, index) => <ProductCard key={product.id} product={product} index={index} selected={shortlist.includes(product.id)} onToggle={() => toggleShortlist(product.id)} />)}
-            </div>
-            <div className="mt-16 flex justify-center"><Link href="/products" className="inline-flex items-center gap-3 bg-[#4E141D] px-6 py-4 text-[10px] uppercase tracking-[0.18em] text-white transition hover:bg-[#C5A059]">Explore the full range <ArrowRight size={14} /></Link></div>
-          </div>
-        </section>
+        <GalleryCarousel />
 
         <section id="science" className="scroll-mt-20 bg-[#e9e4da] px-5 py-20 lg:px-16 lg:py-28">
           <div className="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[1fr_1fr] lg:items-center">

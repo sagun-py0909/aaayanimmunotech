@@ -136,11 +136,11 @@ export function PageShell({ eyebrow, title, intro, breadcrumb, headerSlot, after
   return <div className="min-h-screen bg-[#f4f1ea] text-[#4E141D]">
     <SiteHeader />
     <main className="pt-28">
-      <section className="mx-auto max-w-[1440px] px-5 pb-16 lg:px-16 lg:pb-20">
-        <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[#8a7657]"><Link href="/">Home</Link><span>/</span><span>{breadcrumb || eyebrow}</span></nav>
-        <div className="grid gap-8 border-b border-[#4E141D]/15 pb-12 lg:grid-cols-[1fr_.7fr] lg:items-end">
-          <div><div className="mb-4 text-[10px] uppercase tracking-[0.28em] text-[#8a7657]">{eyebrow}</div><h1 className="font-serif text-[clamp(3rem,6vw,6.8rem)] leading-[.9] tracking-[-0.045em]">{title}</h1></div>
-          <p className="max-w-[470px] text-sm leading-7 text-[#5f5b53] lg:justify-self-end">{intro}</p>
+      <section className="mx-auto max-w-[1440px] px-5 pb-10 lg:px-16 lg:pb-12">
+        <nav aria-label="Breadcrumb" className="mb-5 flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[#8a7657]"><Link href="/">Home</Link><span>/</span><span>{breadcrumb || eyebrow}</span></nav>
+        <div className="grid gap-4 border-b border-[#4E141D]/15 pb-8 lg:grid-cols-[1fr_.7fr] lg:items-end">
+          <div><div className="mb-3 text-[10px] uppercase tracking-[0.28em] text-[#8a7657]">{eyebrow}</div><h1 className="font-serif text-[clamp(2.1rem,3.6vw,3.6rem)] leading-[1] tracking-[-0.03em]">{title}</h1></div>
+          <p className="max-w-[470px] text-sm leading-6 text-[#5f5b53] lg:justify-self-end">{intro}</p>
         </div>
         {headerSlot}
       </section>

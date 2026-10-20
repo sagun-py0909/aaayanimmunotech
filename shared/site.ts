@@ -69,7 +69,7 @@ export const categories = range.map(({ id, name, guide }) => ({ name, slug: id, 
 
 export const catalogue: Product[] = range.map(({ photos, guide: _guide, ...item }) => {
   const images = photos.map(media);
-  return { ...item, headline: item.type, category: item.name, categorySlug: item.id, specs: [], features: [], gains: [], image: images[0], images, gallery: images };
+  return { ...item, headline: "", category: item.name, categorySlug: item.id, specs: [], features: [], gains: [], image: images[0], images, gallery: images };
 });
 
 

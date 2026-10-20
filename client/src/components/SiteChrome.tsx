@@ -37,26 +37,26 @@ export function SiteHeader() {
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#b7a77e]/60 text-[10px] tracking-[0.24em] text-[#d4c39b]">AA</span>
         <span className="whitespace-nowrap font-serif text-[14px] leading-none tracking-[0.1em] sm:text-[18px] sm:tracking-[0.14em] lg:text-[14px] lg:tracking-[0.1em] xl:text-[18px] xl:tracking-[0.14em]">AAAYAN IMMUNOTECH</span>
       </Link>
-      <nav className="hidden items-center gap-7 text-[10px] uppercase tracking-[0.2em] text-white/65 lg:flex" aria-label="Primary">
+      <nav className="hidden items-center gap-7 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/90 lg:flex" aria-label="Primary">
         {navLinks.map((link) => link.menu ? <div key={link.href} className="group relative">
           <Link href={link.href} className="flex items-center gap-1.5 py-2 transition-colors hover:text-white">{link.label}<ChevronDown size={12} className="transition group-hover:rotate-180" /></Link>
           <div className="invisible absolute left-1/2 top-full w-[320px] -translate-x-1/2 pt-3 opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
             <div className="border border-white/10 bg-[#3D0F17] p-2 shadow-2xl shadow-[#2E0A10]/40">
-              {link.menu.map((item, index) => <Link key={item.href} href={item.href} className="flex items-center justify-between gap-3 px-3 py-3 text-white/70 transition hover:bg-white/5 hover:text-white"><span><span className="mr-3 text-[#C5A059]">{pad(index)}</span>{item.label}</span><ArrowRight size={12} className="shrink-0" /></Link>)}
+              {link.menu.map((item, index) => <Link key={item.href} href={item.href} className="flex items-center justify-between gap-3 px-3 py-3 text-white/90 transition hover:bg-white/5 hover:text-white"><span><span className="mr-3 text-[#C5A059]">{pad(index)}</span>{item.label}</span><ArrowRight size={12} className="shrink-0" /></Link>)}
             </div>
           </div>
         </div> : <Link key={link.href} href={link.href} className="transition-colors hover:text-white">{link.label}</Link>)}
       </nav>
       <div className="flex items-center gap-3">
-        <Link href="/contact" className="hidden border border-[#C5A059]/70 px-4 py-2.5 text-[10px] uppercase tracking-[0.18em] text-[#f4e8c7] transition hover:bg-[#C5A059] hover:text-[#4E141D] sm:block">Request a quote</Link>
+        <Link href="/contact" className="hidden border border-[#C5A059]/70 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#f4e8c7] transition hover:bg-[#C5A059] hover:text-[#4E141D] sm:block">Request a quote</Link>
         <button onClick={() => setOpen((value) => !value)} className="rounded-full border border-white/15 p-2 lg:hidden" aria-label="Toggle menu" aria-expanded={open}>{open ? <X size={18} /> : <Menu size={18} />}</button>
       </div>
     </div>
     {open && <div className="max-h-[calc(100vh-73px)] overflow-y-auto border-t border-white/10 bg-[#3D0F17] px-5 py-5 lg:hidden">
-      <div className="flex flex-col gap-5 text-[10px] uppercase tracking-[0.2em] text-white/75">
+      <div className="flex flex-col gap-5 text-[12px] font-semibold uppercase tracking-[0.16em] text-white">
         {navLinks.map((link) => <div key={link.href}>
           <Link href={link.href} onClick={() => setOpen(false)}>{link.label}</Link>
-          {link.menu && <div className="mt-3 flex flex-col gap-3 border-l border-white/10 pl-4 text-white/50">{link.menu.map((item) => <Link key={item.href} href={item.href} onClick={() => setOpen(false)}>{item.label}</Link>)}</div>}
+          {link.menu && <div className="mt-3 flex flex-col gap-3 border-l border-white/15 pl-4 text-[11px] font-medium text-white/80">{link.menu.map((item) => <Link key={item.href} href={item.href} onClick={() => setOpen(false)}>{item.label}</Link>)}</div>}
         </div>)}
         <Link href="/contact" onClick={() => setOpen(false)} className="w-fit border border-[#C5A059]/70 px-4 py-2.5 text-[#f4e8c7]">Request a quote</Link>
       </div>

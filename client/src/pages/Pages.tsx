@@ -114,10 +114,10 @@ export function ProductDetail() {
           {product.specs.map(([label, value]) => <div key={label} className="grid grid-cols-[.42fr_.58fr] gap-4 border-b border-[#4E141D]/15 py-3.5"><dt className="text-[10px] uppercase tracking-[0.16em] text-[#8a7657]">{label}</dt><dd className="text-sm">{value}</dd></div>)}
           <div className="grid grid-cols-[.42fr_.58fr] gap-4 border-b border-[#4E141D]/15 py-3.5"><dt className="text-[10px] uppercase tracking-[0.16em] text-[#8a7657]">Commercial model</dt><dd className="text-sm">Project quotation</dd></div>
         </dl>
-        <div className="mt-10 space-y-0">
+        {product.features.length > 0 && <div className="mt-10 space-y-0">
           <h2 className="text-[10px] uppercase tracking-[0.2em] text-[#8a7657]">What the system does</h2>
           {product.features.slice(0, 4).map((feature, index) => <motion.div key={feature.title} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.5 }} transition={{ duration: 0.55, delay: index * 0.08 }} className="flex items-start gap-5 border-t border-[#4E141D]/15 py-6"><span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#4E141D]/15 text-[#C5A059]"><Check size={15} /></span><div><div className="font-serif text-[22px] leading-tight">{feature.title}</div><p className="mt-2 text-sm leading-6 text-[#6f6a61]">{feature.body}</p></div></motion.div>)}
-        </div>
+        </div>}
         {suited.length > 0 && <div className="mt-9 border-t border-[#4E141D]/15 pt-6">
           <div className="text-[9px] uppercase tracking-[0.16em] text-[#8a7657]">Suited to</div>
           <div className="mt-3 flex flex-wrap gap-2">{suited.map((sector) => <Link key={sector.slug} href={`/sectors/${sector.slug}`} className="rounded-full border border-[#4E141D]/15 px-3 py-1.5 text-[9px] uppercase tracking-[0.14em] text-[#4f4b43] transition hover:border-[#C5A059] hover:text-[#C5A059]">{sector.title}</Link>)}</div>
@@ -129,7 +129,7 @@ export function ProductDetail() {
       </div>
     </div>
 
-    <section className="mt-24 bg-[#4E141D] px-6 py-14 text-white lg:px-14">
+    {product.gains.length > 0 && <section className="mt-24 bg-[#4E141D] px-6 py-14 text-white lg:px-14">
       <div className="flex flex-col justify-between gap-6 border-b border-white/15 pb-8 lg:flex-row lg:items-end">
         <div>
           <div className="text-[10px] uppercase tracking-[0.24em] text-[#C5A059]">What you gain</div>
@@ -144,7 +144,7 @@ export function ProductDetail() {
           <p className="mt-3 text-sm leading-6 text-white/65">{gain.body}</p>
         </motion.div>)}
       </div>
-    </section>
+    </section>}
 
     <section className="mt-24">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-[#4E141D]/15 pb-5">

@@ -22,286 +22,55 @@ export type Product = {
 };
 
 const photo = (name: string) => `/images/photos/${name}.webp`;
-const productImage = (name: string) => `/images/products/${name}.jpg`;
-const galleryPhotos: Record<string, string[]> = {
-  "infrared-sauna": ["recovery-lounge-skyline", "lounge-private"],
-  "hyperbaric-oxygen-hbot": ["hbot-chamber-residence", "hbot-multiplace-interior", "clinic-chambers"],
-  "dry-float-beds": ["lounge-private", "recovery-centre"],
-  "float-tanks-wet": ["residence-pod", "recovery-lounge-skyline"],
-  "pemf": ["recovery-centre", "sector-sports"],
-  "red-light-pbm-therapy-beds": ["red-light-bed", "red-light-panel", "red-light-cryo-suite"],
-  "localized-cryotherapy-chillers": ["red-light-cryo-suite", "sector-sports"],
-  "whole-body-cryotherapy-chambers": ["red-light-cryo-suite", "sector-sports", "recovery-centre"],
-};
-const productGallery: Record<string, string[]> = {
-  "infrared-sauna": ["/images/products/infrared-sauna-2.jpg"],
-  "hyperbaric-oxygen-hbot": [
-    "/images/products/hyperbaric-oxygen-hbot-2.jpg",
-    "/images/products/hbo2-3.webp",
-    "/images/products/hbo2-4.webp",
-    "/images/products/diamond-5000-1.webp",
-    "/images/products/diamond-5000-3.webp",
-    "/images/products/hp1501-1.webp",
-    "/images/products/hp1501-2.webp",
-    "/images/products/mc4000-1.webp",
-    "/images/products/mc4000-2.webp",
-    "/images/products/mc4000-3.webp",
-    "/images/products/l1-1.webp",
-    "/images/products/l1-2.webp",
-    "/images/products/l1-3.webp",
-    "/images/products/st2200-1.webp",
-    "/images/products/st2200-3.webp",
-    "/images/products/st1700-1.webp",
-    "/images/products/st1700-2.webp",
-  ],
-  "dry-float-beds": [
-    "/images/products/dry-float-beds-2.jpg",
-    "/images/products/noah-3.webp",
-  ],
-  "float-tanks-wet": [
-    "/images/products/float-tanks-wet-2.jpg",
-    "/images/products/whalepod-1.webp",
-    "/images/products/relaxpod-1.webp",
-    "/images/products/relaxpod-2.webp",
-  ],
-  "pemf": [],
-  "red-light-pbm-therapy-beds": ["/images/products/red-light-pbm-therapy-beds-2.jpg"],
-  "localized-cryotherapy-chillers": [
-    "/images/products/localized-cryotherapy-chillers-2.jpg",
-    "/images/products/cold-plunge-2.webp",
-  ],
-  "whole-body-cryotherapy-chambers": [
-    "/images/products/whole-body-cryotherapy-chambers-2.jpg",
-    "/images/products/aurora-electric-1.webp",
-    "/images/products/aurora-electric-2.webp",
-    "/images/products/aurora-nitrogen-1.webp",
-    "/images/products/aurora-portable-1.webp",
-  ],
-};
-
 export const plainText = (html: string) => html.replace(/<br\s*\/?>/g, " ").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
 
-// The phone number and WhatsApp line are placeholders until the real business line is confirmed.
-// They are deliberately kept out of structured data (see shared/seo.ts).
+// Business line from the client's product sheet (Aurobindo Padhi, Business Head).
 export const contact = {
   email: "info@aaayanimmunotech.co.in",
-  phone: "+91 98765 43210",
-  whatsapp: "https://wa.me/919876543210",
+  phone: "+91 99580 76644",
+  whatsapp: "https://wa.me/919958076644",
   city: "Hyderabad",
   region: "Hyderabad · Telangana · India",
   hours: "Mon–Fri, 9am–6pm IST",
 };
 
-export const categories = [
-  { name: "Infrared Sauna", slug: "infrared-sauna", label: "Infrared sauna systems", guide: "installation-requirements" },
-  { name: "Hyperbaric Oxygen / HBOT", slug: "hyperbaric-oxygen-hbot", label: "Hyperbaric oxygen / HBOT", guide: "hbot-buying-guide" },
-  { name: "Dry Float Beds", slug: "dry-float-beds", label: "Dry float beds", guide: "build-your-centre" },
-  { name: "Wet Float Tanks", slug: "float-tanks-wet", label: "Wet float tanks", guide: "installation-requirements" },
-  { name: "PEMF", slug: "pemf", label: "PEMF systems", guide: "build-your-centre" },
-  { name: "Red Light / PBM Therapy Beds", slug: "red-light-pbm-therapy-beds", label: "Red light / PBM therapy beds", guide: "red-light-therapy-buying-guide" },
-  { name: "Localized Cryotherapy & Chillers", slug: "localized-cryotherapy-chillers", label: "Localized cryotherapy & chillers", guide: "cryotherapy-buying-guide" },
-  { name: "Whole Body Cryotherapy Chambers", slug: "whole-body-cryotherapy-chambers", label: "Whole body cryotherapy chambers", guide: "cryotherapy-buying-guide" },
+// The client's full product range, star products first. Each product is photos plus one line.
+// Where no photo exists yet the image is an AAAyan placeholder card.
+type Entry = { id: string; name: string; type: string; guide: string; description: string; photos: string[]; sectors: string[]; badge?: string };
+
+const media = (file: string) => `/images/products/${file.includes(".") ? file : `${file}.webp`}`;
+
+const range: Entry[] = [
+  { id: "hyperbaric-oxygen-hbot", name: "HBOT – Luxury Model", type: "Hyperbaric oxygen chamber", guide: "hbot-buying-guide", badge: "Star product", description: "Hard-shell and soft-shell hyperbaric oxygen chambers, from seated luxury models to compact home units.", photos: ["hyperbaric-oxygen-hbot.jpg", "diamond-5000-3", "hyperbaric-oxygen-hbot-2.jpg", "hbo2-4", "hbo2-3", "hbot-interior", "mc4000-1", "mc4000-2", "mc4000-3", "l1-1", "l1-3", "st2200-1", "st2200-3", "st1700-1", "st1700-2"], sectors: ["clinical-medical", "sports-performance", "gyms-spas-hotels", "personal-residential"] },
+  { id: "whole-body-cryotherapy-chambers", name: "Whole Body Cryo", type: "Electric cryotherapy chamber", guide: "cryotherapy-buying-guide", description: "Nitrogen-free electric whole-body cryotherapy cabins.", photos: ["whole-body-cryotherapy-chambers.jpg", "whole-body-cryotherapy-chambers-2.jpg", "aurora-electric-1"], sectors: ["sports-performance", "gyms-spas-hotels", "clinical-medical"] },
+  { id: "red-light-pbm-therapy-beds", name: "Red Light Bed", type: "Red light therapy bed", guide: "red-light-therapy-buying-guide", description: "Full-body red light therapy beds.", photos: ["red-light-pbm-therapy-beds.jpg", "red-light-pbm-therapy-beds-2.jpg"], sectors: ["clinical-medical", "gyms-spas-hotels", "sports-performance"] },
+  { id: "partial-body-cryo", name: "Partial Body Cryo", type: "Nitrogen cryotherapy cabin", guide: "cryotherapy-buying-guide", description: "Nitrogen cryo cabins with the head kept outside the chamber, including a portable model.", photos: ["aurora-nitrogen-1", "aurora-portable-1"], sectors: ["sports-performance", "gyms-spas-hotels"] },
+  { id: "whale-pod", name: "Whale Pod", type: "Smart floatation pod", guide: "build-your-centre", description: "Smart floatation pod with a sculpted, whale-inspired shell.", photos: ["whalepod-1"], sectors: ["gyms-spas-hotels", "personal-residential"] },
+  { id: "ir-sauna-pod", name: "IR Sauna Pod", type: "Infrared sauna pod", guide: "installation-requirements", description: "Lie-down infrared sauna capsule with a built-in control panel.", photos: ["ir-sauna-pod"], sectors: ["gyms-spas-hotels", "personal-residential"] },
+  { id: "float-tanks-wet", name: "Sensory Float Pod", type: "Sensory floatation tank", guide: "installation-requirements", description: "Saltwater sensory floatation pod for spas and recovery studios.", photos: ["float-tanks-wet.jpg", "relaxpod-2"], sectors: ["gyms-spas-hotels", "sports-performance"] },
+  { id: "localized-cryotherapy-chillers", name: "Localised Cryo", type: "Localised cryotherapy unit", guide: "cryotherapy-buying-guide", description: "Targeted cryotherapy unit with a flexible applicator hose.", photos: ["localized-cryotherapy-chillers.jpg"], sectors: ["sports-performance", "clinical-medical"] },
+  { id: "cold-plunge", name: "Cold Plunge", type: "Cold plunge tub", guide: "installation-requirements", description: "Chilled, filtered cold plunge tubs.", photos: ["cold-plunge-1", "cold-plunge-2"], sectors: ["sports-performance", "gyms-spas-hotels", "personal-residential"] },
+  { id: "red-light-panel", name: "Red Light Panel", type: "Red light therapy panel", guide: "red-light-therapy-buying-guide", description: "Free-standing full-body red light therapy panel.", photos: ["red-light-panel"], sectors: ["gyms-spas-hotels", "personal-residential"] },
+  { id: "red-light-mask", name: "Red Light Mask", type: "LED face mask", guide: "red-light-therapy-buying-guide", description: "LED red light therapy face mask.", photos: ["red-light-mask"], sectors: ["gyms-spas-hotels", "personal-residential"] },
+  { id: "dry-massage-bed", name: "Dry Massage Bed (Cold & Hot)", type: "Dry hydro-massage bed", guide: "build-your-centre", description: "Water-jet massage through a soft membrane, with hot and cold modes — the user stays fully clothed.", photos: ["dry-massage-bed-1", "dry-massage-bed-2", "dry-massage-bed-3"], sectors: ["gyms-spas-hotels", "personal-residential", "corporate-wellness"] },
+  { id: "dry-float-beds", name: "Dry Float Bed", type: "Dry floatation bed", guide: "build-your-centre", description: "Zero-gravity dry floatation bed — a weightless feel without getting wet.", photos: ["dry-float-beds.jpg"], sectors: ["gyms-spas-hotels", "corporate-wellness"] },
+  { id: "bio-resonance-pod", name: "Bio Resonance Pod", type: "Wellness pod", guide: "build-your-centre", description: "Enclosed wellness pod with light and bio-resonance programmes.", photos: ["bio-resonance-pod"], sectors: ["gyms-spas-hotels", "clinical-medical"] },
+  { id: "infrared-sauna", name: "IR + FIR + Himalayan Salt Sauna Cabin", type: "Infrared sauna cabin", guide: "installation-requirements", description: "Infrared and far-infrared sauna cabins with a Himalayan salt option.", photos: ["infrared-sauna.jpg", "infrared-sauna-2.jpg"], sectors: ["gyms-spas-hotels", "corporate-wellness", "personal-residential"] },
+  { id: "nano-vi", name: "Nano VI", type: "Nano VI device", guide: "build-your-centre", description: "Compact tabletop Nano VI unit with a flexible breathing hose.", photos: ["nano-vi"], sectors: ["clinical-medical", "personal-residential"] },
+  { id: "hydrogen-inhalation", name: "Hydrogen Inhalation", type: "Hydrogen inhalation system", guide: "build-your-centre", description: "Molecular hydrogen inhalation system.", photos: ["hydrogen-inhalation"], sectors: ["clinical-medical", "personal-residential"] },
+  { id: "hydrogen-bath", name: "Hydrogen Bath", type: "Hydrogen bath system", guide: "build-your-centre", description: "Hydrogen-rich water bath system.", photos: ["hydrogen-bath"], sectors: ["gyms-spas-hotels", "personal-residential"] },
+  { id: "hypoxic-oxygen-inhalation", name: "Hypoxic Oxygen Inhalation", type: "Hypoxic air system", guide: "build-your-centre", description: "Hypoxic and oxygen-enriched air inhalation system.", photos: ["hypoxic-oxygen-inhalation"], sectors: ["sports-performance", "clinical-medical"] },
+  { id: "pemf", name: "PEMF Bed", type: "PEMF bed", guide: "build-your-centre", description: "Full-body PEMF bed.", photos: ["pemf.jpg"], sectors: ["sports-performance", "clinical-medical", "gyms-spas-hotels"] },
+  { id: "body-mass-analyser", name: "Body Mass Analyser", type: "Body composition analyser", guide: "build-your-centre", description: "Body composition and body mass analyser.", photos: ["body-mass-analyser"], sectors: ["clinical-medical", "gyms-spas-hotels", "sports-performance"] },
 ];
 
-export const categoryNames = ["All products", ...categories.map((category) => category.name)];
+// Each product is its own category: the nav and the /products?modality= filter link straight to it.
+export const categories = range.map(({ id, name, guide }) => ({ name, slug: id, label: name, guide }));
 
-const product = (item: Omit<Product, "image" | "categorySlug" | "images" | "gallery">): Product => {
-  const images = [productImage(item.id), ...(productGallery[item.id] ?? [])];
-  return {
-    ...item,
-    categorySlug: categories.find((category) => category.name === item.category)?.slug ?? "",
-    image: productImage(item.id),
-    images,
-    gallery: [...images, ...(galleryPhotos[item.id] ?? []).map(photo)],
-  };
-};
-
-export const catalogue: Product[] = [
-  product({
-    id: "infrared-sauna",
-    name: "Infrared Sauna",
-    type: "Infrared sauna system",
-    category: "Infrared Sauna",
-    headline: "Controlled infrared heat · Full-body use",
-    badge: "01 / Infrared",
-    description: "An infrared sauna system designed to deliver controlled radiant heat in a dedicated wellness environment, with a practical format for repeated sessions.",
-    specs: [["Modality", "Infrared heat"], ["Use", "Wellness and recovery"], ["Format", "Dedicated sauna cabin"], ["Installation", "Site-dependent"]],
-    features: [
-      { title: "Infrared heating", body: "Uses infrared energy to provide controlled radiant heat." },
-      { title: "Full-body sessions", body: "Designed for seated, full-body sauna sessions." },
-      { title: "Wellness focused", body: "Suitable for spas, wellness centres and recovery facilities." },
-      { title: "Planned installation", body: "Room, electrical and ventilation requirements can be reviewed before installation." },
-    ],
-    gains: [
-      { title: "A service members recognise", body: "Infrared sauna is familiar to members, so it needs little explaining at the point of sale." },
-      { title: "Low staffing per session", body: "Sessions run to a timer and need supervision rather than an operator in the room." },
-      { title: "Fits an existing room", body: "A cabin can occupy a spare treatment room instead of new construction." },
-      { title: "Pairs with cold", body: "Sits naturally beside cryotherapy or a plunge as a contrast circuit members book together." },
-    ],
-    sectors: ["gyms-spas-hotels", "corporate-wellness", "personal-residential"],
-  }),
-  product({
-    id: "hyperbaric-oxygen-hbot",
-    name: "Hyperbaric Oxygen / HBOT",
-    type: "Hyperbaric oxygen chamber",
-    category: "Hyperbaric Oxygen / HBOT",
-    headline: "Controlled pressurised oxygen environment",
-    badge: "02 / HBOT",
-    description: "A hyperbaric oxygen therapy system designed to create a controlled pressurised environment for professional wellness and clinical applications.",
-    specs: [["Modality", "Hyperbaric oxygen therapy"], ["Configuration", "Single or multiplace options"], ["Environment", "Pressurised chamber"], ["Installation", "Site survey required"]],
-    features: [
-      { title: "Pressurised environment", body: "Creates a controlled chamber environment for HBOT sessions." },
-      { title: "Professional use", body: "Designed for clinics, recovery centres and professional facilities." },
-      { title: "Multiple configurations", body: "Available in configurations suited to different facility requirements." },
-      { title: "Site planning", body: "Access, power, ventilation and room requirements are assessed before installation." },
-    ],
-    gains: [
-      { title: "A premium line on the price list", body: "HBOT sessions are the highest-value item in most recovery menus." },
-      { title: "Booked in courses", body: "Clients typically buy a block of sessions, which makes revenue easier to forecast." },
-      { title: "A reason to be referred", body: "Few facilities in a given city operate a chamber, which supports referrals and enquiries." },
-      { title: "Planned before it is bought", body: "We confirm access, power, floor loading and ventilation first, so the room is right the first time." },
-    ],
-    sectors: ["clinical-medical", "sports-performance", "gyms-spas-hotels"],
-  }),
-  product({
-    id: "dry-float-beds",
-    name: "Dry Float Beds",
-    type: "Dry floatation therapy bed",
-    category: "Dry Float Beds",
-    headline: "Zero-gravity style relaxation · No water immersion",
-    badge: "03 / Dry Float",
-    description: "A dry floatation bed designed to create a weightless relaxation experience without requiring the user to enter a water-filled tank.",
-    specs: [["Modality", "Dry floatation"], ["Session", "Fully clothed"], ["Water use", "No immersion required"], ["Setting", "Wellness and recovery"]],
-    features: [
-      { title: "Dry floatation", body: "Provides a floating-style experience without water immersion." },
-      { title: "Fully clothed sessions", body: "The user remains dry and clothed during a session." },
-      { title: "Relaxation focused", body: "Designed for rest, relaxation and recovery environments." },
-      { title: "Facility friendly", body: "Suitable for spas, wellness centres and recovery lounges." },
-    ],
-    gains: [
-      { title: "No water plant", body: "There is no tank to fill, filter or drain, so running costs stay close to the electricity bill." },
-      { title: "Short turnaround", body: "Clients stay dry and clothed, so there is no shower or changing time between bookings." },
-      { title: "Easy to staff", body: "One member of staff can run the room alongside other duties." },
-      { title: "Small footprint", body: "A bed fits a standard treatment room, which suits spas adding a service without building." },
-    ],
-    sectors: ["gyms-spas-hotels", "corporate-wellness", "personal-residential"],
-  }),
-  product({
-    id: "float-tanks-wet",
-    name: "Float Tanks — Wet",
-    type: "Water floatation tank",
-    category: "Wet Float Tanks",
-    headline: "Water-based floatation · Sensory relaxation",
-    badge: "04 / Wet Float",
-    description: "A water-based float tank designed for floatation sessions in a controlled, private environment with buoyant water supporting the body.",
-    specs: [["Modality", "Wet floatation"], ["Medium", "Water-based"], ["Experience", "Buoyancy and reduced sensory input"], ["Installation", "Room and plumbing dependent"]],
-    features: [
-      { title: "Water floatation", body: "Uses buoyant water to support the body during a session." },
-      { title: "Private session format", body: "Designed for an individual floatation experience." },
-      { title: "Relaxation environment", body: "Suitable for dedicated wellness and recovery spaces." },
-      { title: "Installation planning", body: "Floor loading, access, water and drainage requirements should be checked in advance." },
-    ],
-    gains: [
-      { title: "A destination service", body: "A float room gives a spa or studio something guests travel for and post about." },
-      { title: "Long, high-value bookings", body: "Sessions are typically an hour, which supports a higher price per booking." },
-      { title: "Planned plant room", body: "Filtration, water treatment and drainage are specified with you before the order." },
-      { title: "Quiet neighbour", body: "A float room needs isolation from noise, which suits an unused corner of a building." },
-    ],
-    sectors: ["gyms-spas-hotels", "personal-residential", "corporate-wellness"],
-  }),
-  product({
-    id: "pemf",
-    name: "PEMF",
-    type: "Pulsed electromagnetic field therapy system",
-    category: "PEMF",
-    headline: "Pulsed electromagnetic field sessions",
-    badge: "05 / PEMF",
-    description: "A PEMF system designed to deliver controlled pulsed electromagnetic field sessions in professional wellness, recovery and rehabilitation environments.",
-    specs: [["Modality", "PEMF"], ["Therapy", "Pulsed electromagnetic fields"], ["Format", "System-dependent applicators"], ["Setting", "Professional wellness / recovery"]],
-    features: [
-      { title: "PEMF delivery", body: "Generates controlled pulsed electromagnetic fields for scheduled sessions." },
-      { title: "Targeted application", body: "Applicator formats can be selected around the intended treatment area." },
-      { title: "Session based", body: "Designed for repeatable, protocol-led sessions." },
-      { title: "Professional setup", body: "Suitable for wellness, recovery and rehabilitation environments." },
-    ],
-    gains: [
-      { title: "Lowest barrier to entry", body: "A PEMF system needs a bed-sized space and single-phase power." },
-      { title: "Adds to an existing session", body: "Runs alongside physiotherapy, training or recovery appointments already on the books." },
-      { title: "Portable between rooms", body: "Systems can be moved, so a facility can test demand before committing a room." },
-      { title: "Short sessions", body: "Session lengths suit a circuit where clients move between stations." },
-    ],
-    sectors: ["clinical-medical", "sports-performance", "corporate-wellness"],
-  }),
-  product({
-    id: "red-light-pbm-therapy-beds",
-    name: "Red Light / PBM Therapy Beds",
-    type: "Full-body photobiomodulation bed",
-    category: "Red Light / PBM Therapy Beds",
-    headline: "Red and near-infrared light · Full-body format",
-    badge: "06 / Red Light + PBM",
-    description: "A full-body photobiomodulation platform using red and near-infrared light in a bed-style format for professional wellness and recovery facilities.",
-    specs: [["Modality", "Photobiomodulation"], ["Light", "Red and near-infrared"], ["Format", "Full-body bed"], ["Setting", "Clinical, wellness and recovery"]],
-    features: [
-      { title: "Full-body format", body: "Designed to provide a large-area light treatment surface." },
-      { title: "Red + near-infrared", body: "Uses red and near-infrared wavelength ranges depending on configuration." },
-      { title: "Repeatable sessions", body: "Built for scheduled sessions in professional facilities." },
-      { title: "Easy access", body: "Bed-style access supports straightforward user positioning." },
-    ],
-    gains: [
-      { title: "High throughput", body: "Short sessions and no changeover plant mean a single bed can serve a full day of bookings." },
-      { title: "Membership add-on", body: "Commonly sold as an add-on tier rather than a one-off, which supports recurring revenue." },
-      { title: "Straightforward install", body: "A bed needs floor space and power, with no water, gas or pressure systems." },
-      { title: "Visible in a space", body: "The bed itself photographs well, which helps a facility market the service." },
-    ],
-    sectors: ["clinical-medical", "sports-performance", "gyms-spas-hotels"],
-  }),
-  product({
-    id: "localized-cryotherapy-chillers",
-    name: "Localized Cryotherapy & Chillers",
-    type: "Localized cryotherapy system",
-    category: "Localized Cryotherapy & Chillers",
-    headline: "Targeted cold application · Controlled cooling",
-    badge: "07 / Localized Cryo",
-    description: "A localized cryotherapy system designed for targeted cold application, supported by dedicated chilling equipment for controlled operation.",
-    specs: [["Modality", "Localized cryotherapy"], ["Application", "Targeted cooling"], ["System", "Cryotherapy + chiller"], ["Setting", "Professional recovery"]],
-    features: [
-      { title: "Localized cooling", body: "Designed for targeted rather than whole-body cold application." },
-      { title: "Controlled temperature", body: "Chiller-supported operation provides controlled cooling." },
-      { title: "Recovery focused", body: "Suitable for sports recovery and wellness facilities." },
-      { title: "Compact planning", body: "Can be specified around the available treatment-room layout." },
-    ],
-    gains: [
-      { title: "Entry point to cryotherapy", body: "A chiller lets a facility offer cryotherapy before committing to a full chamber." },
-      { title: "Targeted, short sessions", body: "Sessions are brief and applied to one area, so they slot between appointments." },
-      { title: "Compact and movable", body: "Units suit physiotherapy rooms, clinics and gym floors without a dedicated room." },
-      { title: "Supports a chamber", body: "Works alongside a whole body chamber as a lower-priced option on the same menu." },
-    ],
-    sectors: ["sports-performance", "clinical-medical", "gyms-spas-hotels"],
-  }),
-  product({
-    id: "whole-body-cryotherapy-chambers",
-    name: "Whole Body Cryotherapy Chambers",
-    type: "Whole-body cryotherapy chamber",
-    category: "Whole Body Cryotherapy Chambers",
-    headline: "Whole-body cold exposure · Professional chamber format",
-    badge: "08 / Whole Body Cryo",
-    description: "A whole-body cryotherapy chamber designed to expose the user to a controlled low-temperature environment for professional recovery and wellness sessions.",
-    specs: [["Modality", "Whole-body cryotherapy"], ["Format", "Cryotherapy chamber"], ["Application", "Full-body cold exposure"], ["Installation", "Site survey required"]],
-    features: [
-      { title: "Whole-body format", body: "Designed for full-body exposure in a dedicated chamber." },
-      { title: "Controlled cold", body: "Creates a managed low-temperature session environment." },
-      { title: "Professional throughput", body: "Suitable for recovery centres, sports facilities and wellness businesses." },
-      { title: "Safety planning", body: "Room layout, ventilation, operating procedures and site requirements should be assessed before installation." },
-    ],
-    gains: [
-      { title: "The headline of a recovery floor", body: "A chamber is the service most members and athletes ask for by name." },
-      { title: "Volume per hour", body: "Sessions run a few minutes, so one chamber can serve many people in a peak hour." },
-      { title: "Sold as a package", body: "Session blocks and memberships suit the format, which supports repeat revenue." },
-      { title: "Specified around your room", body: "Nitrogen or electric, and the capacity, are chosen against your space, power and expected volume." },
-    ],
-    sectors: ["sports-performance", "gyms-spas-hotels", "clinical-medical"],
-  }),
-];
+export const catalogue: Product[] = range.map(({ photos, guide: _guide, ...item }) => {
+  const images = photos.map(media);
+  return { ...item, headline: item.type, category: item.name, categorySlug: item.id, specs: [], features: [], gains: [], image: images[0], images, gallery: images };
+});
 
 
 const sectorMeta = [

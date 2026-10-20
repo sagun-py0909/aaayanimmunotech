@@ -27,13 +27,14 @@ export type SeoEntry = {
 
 type Node = Record<string, unknown>;
 
-// Telephone and street address are omitted on purpose: the current values are placeholders, and a wrong
-// NAP in structured data suppresses local ranking. Add them here once the real details are confirmed.
+// Street address is omitted on purpose until it is confirmed: a wrong NAP in structured data suppresses
+// local ranking.
 const ORGANIZATION: Node = {
   "@type": "Organization",
   "@id": `${SITE}/#organization`,
   name: BRAND,
   alternateName: "AAAyan",
+  telephone: contact.phone,
   url: `${SITE}/`,
   logo: { "@type": "ImageObject", url: `${SITE}/images/aaayan-logo-with-name.svg`, caption: BRAND },
   description: "Supplier and turnkey installer of wellness and recovery equipment — hyperbaric oxygen chambers, whole-body cryotherapy chambers and red light therapy (photobiomodulation) systems.",

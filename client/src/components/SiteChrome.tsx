@@ -21,7 +21,7 @@ export function Html({ html, as: Tag = "div", className }: { html: string; as?: 
 }
 
 const navLinks: { href: string; label: string; menu?: { href: string; label: string }[] }[] = [
-  { href: "/products", label: "Products", menu: [{ href: "/products", label: "Full product range" }, ...categories.map((category) => ({ href: `/products/${category.slug}`, label: category.label }))] },
+  { href: "/products", label: "Products", menu: [{ href: "/products", label: "Full product range" }, ...categories.slice(0, 8).map((category) => ({ href: `/products/${category.slug}`, label: category.label }))] },
   { href: "/sectors", label: "Sectors", menu: sectors.map((sector) => ({ href: `/sectors/${sector.slug}`, label: sector.title })) },
   { href: "/guides", label: "Buying guides", menu: guideGroups.flatMap((group) => group.slugs).map((slug) => ({ href: `/guides/${slug}`, label: guideLabels[slug] })) },
   { href: "/blog", label: "Blog" },
@@ -71,7 +71,7 @@ export function WhatsAppButton() {
 // The link columns mirror the legacy site's crawlable .seo-directory, so every page links to every indexable page.
 export function SiteFooter() {
   const columns = [
-    { title: "Products", links: categories.map((category) => ({ href: `/products/${category.slug}`, label: category.label })) },
+    { title: "Products", links: [...categories.slice(0, 8).map((category) => ({ href: `/products/${category.slug}`, label: category.label })), { href: "/products", label: "Full product range" }] },
     ...guideGroups.map((group) => ({ title: group.title, links: group.slugs.map((slug) => ({ href: `/guides/${slug}`, label: guideLabels[slug] })) })),
     { title: "Sectors", links: sectors.map((sector) => ({ href: `/sectors/${sector.slug}`, label: sector.title })) },
     // The legacy equipment pages keep their own URLs and their rankings, so they stay crawlable from every page.
@@ -156,9 +156,9 @@ export function ProductCard({ product, index, selected = false, onToggle }: { pr
     <div className="relative aspect-[1.12] overflow-hidden rounded-[28px] border border-[#4E141D]/10 bg-[#ebe7de] p-5 shadow-[0_16px_45px_rgba(46,10,16,0.08)] transition duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_22px_55px_rgba(46,10,16,0.13)]">
       <div className="pointer-events-none absolute left-4 top-4 h-16 w-16 rounded-tl-2xl border-l border-t border-[#C5A059]/35" />
       <div className="pointer-events-none absolute bottom-4 right-4 h-16 w-16 rounded-br-2xl border-b border-r border-[#C5A059]/35" />
-      <Link href={`/products/${product.id}`} aria-label={`View ${product.name}`} className="absolute inset-0 flex items-center justify-center p-7 sm:p-9">
-        <img src={product.images[0] ?? product.image} alt={`${product.name} — ${product.type}`} loading="lazy" className="h-[78%] w-[82%] object-contain drop-shadow-[0_18px_22px_rgba(0,0,0,0.12)] transition duration-700 group-hover:scale-[1.035] group-hover:opacity-0" />
-        {product.images[1] && <img src={product.images[1]} alt={`${product.name} — alternate view`} loading="lazy" className="absolute h-[78%] w-[82%] object-contain drop-shadow-[0_18px_22px_rgba(0,0,0,0.12)] opacity-0 transition duration-700 group-hover:scale-[1.035] group-hover:opacity-100" />}
+      <Link href={`/products/${product.id}`} aria-label={`View ${product.name}`} className="absolute inset-0 flex items-center justify-center">
+        <img src={product.images[0] ?? product.image} alt={`${product.name} — ${product.type}`} loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.035] group-hover:opacity-0" />
+        {product.images[1] && <img src={product.images[1]} alt={`${product.name} — alternate view`} loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-0 transition duration-700 group-hover:scale-[1.035] group-hover:opacity-100" />}
       </Link>
       <div className="pointer-events-none absolute inset-x-5 top-5 flex items-start justify-between gap-2"><span className="rounded-full bg-[#f4f1ea]/90 px-2.5 py-1 text-[9px] uppercase tracking-[0.15em] text-[#514b42] shadow-sm">{pad(index)}</span>{product.badge && <span className="rounded-full bg-[#C5A059] px-2.5 py-1 text-[9px] uppercase tracking-[0.14em] text-[#4E141D] shadow-sm">{product.badge}</span>}</div>
       <div className="pointer-events-none absolute bottom-5 left-5 rounded-full bg-[#4E141D]/75 px-3 py-1.5 text-[8px] uppercase tracking-[0.14em] text-white/90 opacity-0 transition group-hover:opacity-100">View alternate image</div>

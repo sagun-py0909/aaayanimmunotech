@@ -102,12 +102,12 @@ function buildEntries(): SeoEntry[] {
     },
     {
       path: "/products",
-      title: "Wellness Equipment Supplier India | Product Range",
+      title: "Wellness Equipment Supplier India | Products",
       description: "The full AAAyan Immunotech range: hyperbaric oxygen chambers, whole body cryotherapy chambers and commercial photobiomodulation beds supplied across India.",
       ogType: "website",
       changefreq: "weekly",
       priority: 0.9,
-      graph: [webPage("CollectionPage", "/products", "Product Range"), itemList("AAAyan Immunotech product range", catalogue), breadcrumb([["Home", "/"], ["Product Range", "/products"]])],
+      graph: [webPage("CollectionPage", "/products", "Products"), itemList("AAAyan Immunotech products", catalogue), breadcrumb([["Home", "/"], ["Products", "/products"]])],
     },
   ];
 
@@ -148,7 +148,7 @@ function buildEntries(): SeoEntry[] {
           additionalProperty: item.specs.map(([name, value]) => ({ "@type": "PropertyValue", name, value })),
           isRelatedTo: { "@id": `${SITE}/#installation-service` },
         },
-        breadcrumb([["Home", "/"], ["Product Range", "/products"], [item.name, path]]),
+        breadcrumb([["Home", "/"], ["Products", "/products"], [item.name, path]]),
       ],
     });
   }

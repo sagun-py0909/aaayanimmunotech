@@ -21,7 +21,7 @@ export function Html({ html, as: Tag = "div", className }: { html: string; as?: 
 }
 
 const navLinks: { href: string; label: string; menu?: { href: string; label: string }[] }[] = [
-  { href: "/products", label: "Products", menu: [{ href: "/products", label: "Full product range" }, ...categories.slice(0, 8).map((category) => ({ href: `/products/${category.slug}`, label: category.label }))] },
+  { href: "/products", label: "Products", menu: [{ href: "/products", label: "Products" }, ...categories.slice(0, 8).map((category) => ({ href: `/products/${category.slug}`, label: category.label }))] },
   { href: "/sectors", label: "Sectors", menu: sectors.map((sector) => ({ href: `/sectors/${sector.slug}`, label: sector.title })) },
   { href: "/guides", label: "Buying guides", menu: guideGroups.flatMap((group) => group.slugs).map((slug) => ({ href: `/guides/${slug}`, label: guideLabels[slug] })) },
   { href: "/blog", label: "Blog" },
@@ -71,12 +71,12 @@ export function WhatsAppButton() {
 // The link columns mirror the legacy site's crawlable .seo-directory, so every page links to every indexable page.
 export function SiteFooter() {
   const columns = [
-    { title: "Products", links: [...categories.slice(0, 8).map((category) => ({ href: `/products/${category.slug}`, label: category.label })), { href: "/products", label: "Full product range" }] },
+    { title: "Products", links: [...categories.slice(0, 8).map((category) => ({ href: `/products/${category.slug}`, label: category.label })), { href: "/products", label: "Products" }] },
     ...guideGroups.map((group) => ({ title: group.title, links: group.slugs.map((slug) => ({ href: `/guides/${slug}`, label: guideLabels[slug] })) })),
     { title: "Sectors", links: sectors.map((sector) => ({ href: `/sectors/${sector.slug}`, label: sector.title })) },
     // The legacy equipment pages keep their own URLs and their rankings, so they stay crawlable from every page.
     { title: "Price & supply", links: equipmentPages.map((page) => ({ href: `/equipment/${page.slug}`, label: page.breadcrumb })) },
-    { title: "Company", links: [{ href: "/", label: "Home" }, { href: "/products", label: "Product range" }, { href: "/blog", label: "Blog" }, { href: "/support", label: "Support" }, { href: "/contact", label: `Contact — ${contact.city}` }] },
+    { title: "Company", links: [{ href: "/", label: "Home" }, { href: "/products", label: "Products" }, { href: "/blog", label: "Blog" }, { href: "/support", label: "Support" }, { href: "/contact", label: `Contact — ${contact.city}` }] },
   ];
   return <>
     <footer className="bg-[#3D0F17] px-5 pb-10 pt-16 text-white lg:px-16">

@@ -35,7 +35,7 @@ export function SiteHeader() {
     <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-4 lg:px-10">
       <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="AAAyan Immunotech home">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#b7a77e]/60 text-[10px] tracking-[0.24em] text-[#d4c39b]">AA</span>
-        <span className="whitespace-nowrap font-serif text-[14px] leading-none tracking-[0.1em] sm:text-[18px] sm:tracking-[0.14em] lg:text-[14px] lg:tracking-[0.1em] xl:text-[18px] xl:tracking-[0.14em]">AAAYAN IMMUNOTECH</span>
+        <span className="whitespace-nowrap font-serif text-[14px] leading-none tracking-[0.1em] sm:text-[18px] sm:tracking-[0.14em] lg:text-[14px] lg:tracking-[0.1em] xl:text-[18px] xl:tracking-[0.14em]">AAAYANIMMUNOTECH</span>
       </Link>
       <nav className="hidden items-center gap-7 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/90 lg:flex" aria-label="Primary">
         {navLinks.map((link) => link.menu ? <div key={link.href} className="group relative">
@@ -83,7 +83,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-[1440px]">
         <div className="grid gap-12 border-b border-white/10 pb-12 lg:grid-cols-[1fr_1fr] lg:items-end">
           <div>
-            <Link href="/" className="whitespace-nowrap font-serif text-[clamp(1.125rem,5.5vw,1.875rem)] tracking-[0.12em]">AAAYAN IMMUNOTECH</Link>
+            <Link href="/" className="whitespace-nowrap font-serif text-[clamp(1.125rem,5.5vw,1.875rem)] tracking-[0.12em]">AAAYANIMMUNOTECH</Link>
             <div className="mt-2 text-[9px] uppercase tracking-[0.3em] text-white/45">Recovery, performance & longevity</div>
             <p className="mt-6 max-w-[440px] text-sm leading-7 text-white/55">Wellness equipment supplier in India — specifying, installing and servicing recovery, wellness and performance systems for professional environments.</p>
           </div>

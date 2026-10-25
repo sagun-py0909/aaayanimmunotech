@@ -1,0 +1,8 @@
+# Client source material and local review files stay off Vercel; the build only needs the repo.
+*.zip
+*.pdf
+PHOTO-*.jpg
+product-photo-mapping.jpg
+media-review/
+dist/
+handover/

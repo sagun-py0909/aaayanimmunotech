@@ -20,8 +20,9 @@ export function Html({ html, as: Tag = "div", className }: { html: string; as?: 
   return <Tag className={className} onClick={onClick} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
-const navLinks: { href: string; label: string; menu?: { href: string; label: string }[] }[] = [
-  { href: "/products", label: "Products", menu: [{ href: "/products", label: "Products" }, ...categories.slice(0, 8).map((category) => ({ href: `/products/${category.slug}`, label: category.label }))] },
+// `wide` menus list every product in a grid panel that spans the nav, not a narrow dropdown under the link.
+const navLinks: { href: string; label: string; wide?: boolean; menu?: { href: string; label: string }[] }[] = [
+  { href: "/products", label: "Products", wide: true, menu: categories.map((category) => ({ href: `/products/${category.slug}`, label: category.label })) },
   { href: "/sectors", label: "Sectors", menu: sectors.map((sector) => ({ href: `/sectors/${sector.slug}`, label: sector.title })) },
   { href: "/guides", label: "Buying guides", menu: guideGroups.flatMap((group) => group.slugs).map((slug) => ({ href: `/guides/${slug}`, label: guideLabels[slug] })) },
   { href: "/blog", label: "Blog" },
@@ -37,13 +38,18 @@ export function SiteHeader() {
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#b7a77e]/60 text-[10px] tracking-[0.24em] text-[#d4c39b]">AA</span>
         <span className="whitespace-nowrap font-serif text-[14px] leading-none tracking-[0.1em] sm:text-[18px] sm:tracking-[0.14em] lg:text-[14px] lg:tracking-[0.1em] xl:text-[18px] xl:tracking-[0.14em]">AAAYANIMMUNOTECH</span>
       </Link>
-      <nav className="hidden items-center gap-7 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/90 lg:flex" aria-label="Primary">
-        {navLinks.map((link) => link.menu ? <div key={link.href} className="group relative">
+      <nav className="relative hidden items-center gap-7 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/90 lg:flex" aria-label="Primary">
+        {navLinks.map((link) => link.menu ? <div key={link.href} className={`group ${link.wide ? "" : "relative"}`}>
           <Link href={link.href} className="flex items-center gap-1.5 py-2 transition-colors hover:text-white">{link.label}<ChevronDown size={12} className="transition group-hover:rotate-180" /></Link>
-          <div className="invisible absolute left-1/2 top-full w-[320px] -translate-x-1/2 pt-3 opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
-            <div className="border border-white/10 bg-[#3D0F17] p-2 shadow-2xl shadow-[#2E0A10]/40">
+          <div className={`invisible absolute left-1/2 top-full -translate-x-1/2 pt-3 opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100 ${link.wide ? "w-[min(920px,calc(100vw-48px))]" : "w-[320px]"}`}>
+            {link.wide ? <div className="border border-white/10 bg-[#3D0F17] p-3 shadow-2xl shadow-[#2E0A10]/40">
+              <div className="grid grid-cols-4 gap-x-1">
+                {link.menu.map((item, index) => <Link key={item.href} href={item.href} className="flex items-baseline gap-2.5 px-3 py-2.5 leading-snug text-white/90 transition hover:bg-white/5 hover:text-white"><span className="shrink-0 text-[#C5A059]">{pad(index)}</span>{item.label}</Link>)}
+              </div>
+              <Link href={link.href} className="mt-2 flex items-center justify-end gap-2 border-t border-white/10 px-3 pb-1 pt-3 text-[10px] text-[#C5A059] transition hover:text-white">View all products <ArrowRight size={12} /></Link>
+            </div> : <div className="border border-white/10 bg-[#3D0F17] p-2 shadow-2xl shadow-[#2E0A10]/40">
               {link.menu.map((item, index) => <Link key={item.href} href={item.href} className="flex items-center justify-between gap-3 px-3 py-3 text-white/90 transition hover:bg-white/5 hover:text-white"><span><span className="mr-3 text-[#C5A059]">{pad(index)}</span>{item.label}</span><ArrowRight size={12} className="shrink-0" /></Link>)}
-            </div>
+            </div>}
           </div>
         </div> : <Link key={link.href} href={link.href} className="transition-colors hover:text-white">{link.label}</Link>)}
       </nav>
@@ -71,7 +77,7 @@ export function WhatsAppButton() {
 // The link columns mirror the legacy site's crawlable .seo-directory, so every page links to every indexable page.
 export function SiteFooter() {
   const columns = [
-    { title: "Products", links: [...categories.slice(0, 8).map((category) => ({ href: `/products/${category.slug}`, label: category.label })), { href: "/products", label: "Products" }] },
+    { title: "Products", wide: true, links: [...categories.map((category) => ({ href: `/products/${category.slug}`, label: category.label })), { href: "/products", label: "All products" }] },
     ...guideGroups.map((group) => ({ title: group.title, links: group.slugs.map((slug) => ({ href: `/guides/${slug}`, label: guideLabels[slug] })) })),
     { title: "Sectors", links: sectors.map((sector) => ({ href: `/sectors/${sector.slug}`, label: sector.title })) },
     // The legacy equipment pages keep their own URLs and their rankings, so they stay crawlable from every page.
@@ -100,9 +106,9 @@ export function SiteFooter() {
         <nav aria-label="Products and guides" className="py-12">
           <h2 className="mb-8 font-serif text-2xl text-white/85">Wellness Equipment Supplier in India — Full Range</h2>
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
-            {columns.map((column) => <div key={column.title}>
+            {columns.map((column) => <div key={column.title} className={"wide" in column ? "sm:col-span-2" : ""}>
               <h3 className="mb-4 text-[9px] uppercase tracking-[0.22em] text-[#C5A059]">{column.title}</h3>
-              <ul className="space-y-3 text-xs text-white/55">{column.links.map((link) => <li key={link.href}><Link href={link.href} className="transition hover:text-white">{link.label}</Link></li>)}</ul>
+              <ul className={`text-xs text-white/55 ${"wide" in column ? "columns-2 gap-8 [&>li]:mb-3 [&>li]:break-inside-avoid" : "space-y-3"}`}>{column.links.map((link) => <li key={link.href}><Link href={link.href} className="transition hover:text-white">{link.label}</Link></li>)}</ul>
             </div>)}
           </div>
         </nav>

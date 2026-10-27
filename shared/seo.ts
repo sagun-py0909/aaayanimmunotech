@@ -1,4 +1,4 @@
-import { catalogue, categories, contact, equipmentPages, guideLabels, guides, plainText, productsForLegacyCategory, sectors, type Product } from "./site";
+import { catalogue, categories, contact, equipmentPages, guideLabels, guides, plainText, productAliases, productsForLegacyCategory, sectors, type Product } from "./site";
 import type { Faq } from "./content-types";
 import { categorySlug, htmlToText, wordCount, type PostSummary, type PublicPost } from "./blog";
 
@@ -268,6 +268,8 @@ export const legacyRedirects: Record<string, string> = {
     "commercial-cold-plunge": "whole-body-cryotherapy-chambers",
     "compression-therapy-system": "pemf",
   }).map(([from, to]) => [`/products/${from}`, `/products/${to}`])),
+  // Products merged into another entry.
+  ...Object.fromEntries(Object.entries(productAliases).map(([from, to]) => [`/products/${from}`, `/products/${to}`])),
   ...Object.fromEntries(equipmentPages.map((page) => [page.legacyPath, `/equipment/${page.slug}`])),
   ...Object.fromEntries(guides.map((page) => [page.legacyPath, `/guides/${page.slug}`])),
   ...Object.fromEntries(sectors.map((sector) => [sector.legacyPath, `/sectors/${sector.slug}`])),

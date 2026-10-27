@@ -37,7 +37,7 @@ export const contact = {
 };
 
 // The client's full product range, star products first. Each product is photos plus one line.
-// Where no photo exists yet (hypoxic oxygen, body mass analyser) the image is an AAAyan placeholder card.
+// Where no photo exists yet (body mass analyser) the image is an AAAyan placeholder card.
 type Entry = { id: string; name: string; type: string; guide: string; description: string; photos: string[]; sectors: string[]; badge?: string; videos?: { src: string; poster: string }[] };
 
 const media = (file: string) => `/images/products/${file.includes(".") ? file : `${file}.webp`}`;

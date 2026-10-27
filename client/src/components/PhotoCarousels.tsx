@@ -8,7 +8,6 @@ const photo = (name: string) => `/images/photos/${name}.webp`;
 
 // Real equipment photography (1164–1600px) — large enough for a full-bleed hero.
 const heroSlides = [
-  { image: photo("hbot-chamber-residence"), alt: "Hard shell hyperbaric oxygen chamber installed in a private residence", eyebrow: "Hyperbaric oxygen", title: "Hard shell HBOT chambers", href: "/equipment/hyperbaric-oxygen-chambers", flip: true },
   { image: photo("hbot-gold-ocean"), alt: "Gold luxury hyperbaric oxygen chamber in an ocean-view suite", eyebrow: "Luxury HBOT", title: "Signature gold hyperbaric chamber", href: "/products/hyperbaric-oxygen-hbot", position: "50% 60%" },
   { image: photo("hbot-multiplace-interior"), alt: "Seating inside a walk-in multiplace hyperbaric chamber", eyebrow: "Multiplace HBOT", title: "Walk-in chambers for group sessions", href: "/equipment/hyperbaric-oxygen-chambers" },
   { image: photo("float-pod-suite"), alt: "Sensory floatation pod with the lid open in a spa suite", eyebrow: "Floatation", title: "Sensory float pods", href: "/products/float-tanks-wet" },

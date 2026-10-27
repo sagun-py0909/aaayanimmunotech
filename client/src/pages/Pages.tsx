@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Link, useRoute, useSearch } from "wouter";
@@ -85,7 +85,23 @@ export function ProductDetail() {
   const suited = sectors.filter((sector) => product.sectors.includes(sector.slug));
   const related = catalogue.filter((item) => item.id !== product.id && item.sectors.some((slug) => product.sectors.includes(slug))).slice(0, 3);
   const quoteHref = `/contact?product=${product.id}`;
-  return <div className="min-h-screen bg-[#f4f1ea] text-[#4E141D]"><SiteHeader /><main className="mx-auto max-w-[1440px] px-5 pb-24 pt-32 lg:px-16">
+  const video = product.videos?.[0];
+  return <div className="min-h-screen bg-[#f4f1ea] text-[#4E141D]"><SiteHeader />
+    {/* A product with a video opens on it: full screen, muted and looping, with a cue to scroll on to the details. */}
+    {video && <section className="relative h-[100svh] min-h-[560px] overflow-hidden bg-[#2E0A10] text-white">
+      <video src={video.src} poster={video.poster} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,rgba(46,10,16,.85)_0%,rgba(46,10,16,.15)_45%,rgba(46,10,16,.35)_100%)]" />
+      <div className="relative mx-auto flex h-full max-w-[1440px] flex-col justify-end px-5 pb-28 lg:px-16 lg:pb-32">
+        <div className="text-[10px] uppercase tracking-[0.24em] text-[#C5A059] lg:text-xs">{product.type}</div>
+        <div className="mt-3 max-w-[820px] font-serif text-[clamp(2.6rem,6vw,6rem)] leading-[.92] tracking-[-0.035em]">{product.name}</div>
+        <div className="mt-7 flex flex-wrap gap-3">
+          <Link href={quoteHref} className="inline-flex items-center gap-3 bg-[#C5A059] px-5 py-3.5 text-[10px] uppercase tracking-[0.18em] text-[#4E141D] transition hover:bg-[#f4e9cc]">Request a quotation <ArrowRight size={14} /></Link>
+          <a href={contact.whatsapp} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border border-white/35 px-5 py-3.5 text-[10px] uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"><MessageCircle size={14} /> WhatsApp</a>
+        </div>
+      </div>
+      <a href="#details" className="absolute inset-x-0 bottom-6 mx-auto flex w-fit flex-col items-center gap-1 text-[10px] uppercase tracking-[0.24em] text-white/80 transition hover:text-white">Scroll for photos & details<ChevronDown size={22} className="animate-bounce" /></a>
+    </section>}
+    <main id="details" className={`mx-auto max-w-[1440px] scroll-mt-20 px-5 pb-24 lg:px-16 ${video ? "pt-14" : "pt-32"}`}>
     <nav aria-label="Breadcrumb" className="mb-8 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[#8a7657]"><Link href="/">Home</Link><span>/</span><Link href="/products">Products</Link><span>/</span><span>{product.name}</span></nav>
 
     <div className="grid gap-12 lg:grid-cols-[3fr_2fr] lg:items-start">
@@ -145,16 +161,6 @@ export function ProductDetail() {
         </motion.div>)}
       </div>
     </section>}
-
-    {product.videos?.length ? <section className="mt-24">
-      <div className="mb-8 border-b border-[#4E141D]/15 pb-5">
-        <div className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059]">Video</div>
-        <h2 className="mt-3 font-serif text-4xl">See the {product.name} in use.</h2>
-      </div>
-      <div className={`grid gap-6 ${product.videos.length > 1 ? "lg:grid-cols-2" : "max-w-[960px]"}`}>
-        {product.videos.map((video) => <video key={video.src} src={video.src} poster={video.poster} controls playsInline preload="none" className="aspect-video w-full rounded-[20px] bg-[#2E0A10] object-contain shadow-[0_16px_45px_rgba(46,10,16,0.12)]" />)}
-      </div>
-    </section> : null}
 
     <section className="mt-24">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-[#4E141D]/15 pb-5">

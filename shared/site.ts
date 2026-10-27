@@ -21,6 +21,15 @@ export type Product = {
   videos?: { src: string; poster: string }[];
   badge?: string;
   sectors: string[];
+  /** Health benefits shown as icons below the photos; icon names are lucide-react icons. */
+  benefits?: Benefits;
+};
+
+export type Benefits = {
+  headline: string;
+  items: { icon: string; label: string }[];
+  focus: { icon: string; title: string; points: string[] }[];
+  badges: string[];
 };
 
 const photo = (name: string) => `/images/photos/${name}.webp`;
@@ -66,12 +75,35 @@ const range: Entry[] = [
   { id: "body-mass-analyser", name: "Body Mass Analyser", type: "Body composition analyser", guide: "build-your-centre", description: "Body composition and body mass analyser.", photos: ["body-mass-analyser"], sectors: ["clinical-medical", "gyms-spas-hotels", "sports-performance"] },
 ];
 
+// Health benefits from the client's own posters, worded as wellness support rather than medical claims.
+const benefits: Record<string, Benefits> = {
+  "red-light-pbm-therapy-beds": {
+    headline: "One session, whole-body benefits.",
+    items: [
+      { icon: "Bandage", label: "Pain relief" },
+      { icon: "Sparkles", label: "Anti-ageing" },
+      { icon: "Smile", label: "Mood boost" },
+      { icon: "ScanFace", label: "Skin health" },
+      { icon: "Scale", label: "Weight loss support" },
+      { icon: "Dumbbell", label: "Sports injury recovery" },
+      { icon: "Flame", label: "Soothes inflammation" },
+      { icon: "Moon", label: "Better sleep" },
+      { icon: "HeartPulse", label: "Blood circulation" },
+    ],
+    focus: [
+      { icon: "PersonStanding", title: "Full-body recovery", points: ["Muscle recovery", "Post-activity comfort", "Local circulation", "Sleep support"] },
+      { icon: "Bone", title: "Joint vitality", points: ["Inflammation response", "Eases stiffness", "Long-term joint care"] },
+    ],
+    badges: ["Non-invasive", "No patches needed", "Gentle & skin-friendly"],
+  },
+};
+
 // Each product is its own category: the nav and the /products?modality= filter link straight to it.
 export const categories = range.map(({ id, name, guide }) => ({ name, slug: id, label: name, guide }));
 
 export const catalogue: Product[] = range.map(({ photos, guide: _guide, ...item }) => {
   const images = photos.map(media);
-  return { ...item, headline: "", category: item.name, categorySlug: item.id, specs: [], features: [], gains: [], image: images[0], images, gallery: images };
+  return { ...item, headline: "", category: item.name, categorySlug: item.id, specs: [], features: [], gains: [], image: images[0], images, gallery: images, benefits: benefits[item.id] };
 });
 
 

@@ -8,8 +8,10 @@ const photo = (name: string) => `/images/photos/${name}.webp`;
 
 // Real equipment photography (1164–1600px) — large enough for a full-bleed hero.
 const heroSlides = [
-  { image: photo("hbot-gold-ocean"), alt: "Gold luxury hyperbaric oxygen chamber in an ocean-view suite", eyebrow: "Luxury HBOT", title: "Signature gold hyperbaric chamber", href: "/products/hyperbaric-oxygen-hbot", position: "50% 60%" },
+  { image: photo("hbot-gold-ocean"), alt: "Gold luxury hyperbaric oxygen chamber in an ocean-view suite", eyebrow: "Luxury HBOT", title: "Signature gold hyperbaric chamber", href: "/products/hyperbaric-oxygen-hbot" },
   { image: photo("hbot-multiplace-interior"), alt: "Seating inside a walk-in multiplace hyperbaric chamber", eyebrow: "Multiplace HBOT", title: "Walk-in chambers for group sessions", href: "/equipment/hyperbaric-oxygen-chambers" },
+  { image: photo("cryo-whole-body-cabin"), alt: "Electric whole body cryotherapy cabin with blue lighting", eyebrow: "Whole body cryotherapy", title: "Electric whole body cryo cabins", href: "/products/whole-body-cryotherapy-chambers" },
+  { image: photo("cryo-nitrogen-suite"), alt: "Nitrogen cryotherapy cabin opened by a therapist as a client waits", eyebrow: "Nitrogen cryotherapy", title: "Nitrogen cryo cabins", href: "/products/partial-body-cryo" },
   { image: photo("float-pod-suite"), alt: "Sensory floatation pod with the lid open in a spa suite", eyebrow: "Floatation", title: "Sensory float pods", href: "/products/float-tanks-wet" },
 ];
 
@@ -57,7 +59,11 @@ export function HeroCarousel({ onExplore, onEnquire }: { onExplore: () => void; 
     <div ref={viewportRef} className="absolute inset-0 overflow-hidden">
       <div className="flex h-full">
         {heroSlides.map((item, index) => <div key={item.image} className={`relative h-full min-w-0 flex-[0_0_100%] overflow-hidden ${"flip" in item && item.flip ? "-scale-x-100" : ""}`} aria-roledescription="slide" aria-label={`${index + 1} of ${heroSlides.length}`}>
-          <img src={item.image} alt={item.alt} loading={index === 0 ? "eager" : "lazy"} style={"position" in item ? { objectPosition: item.position } : undefined} className={`h-full w-full object-cover transition-transform duration-[7000ms] ease-out ${index === selected ? "scale-110" : "scale-100"}`} />
+          {/* None of these photos is large enough to fill the screen, so a blurred copy fills the background and the photo itself sits uncropped on the right at no more than its own size. */}
+          <img src={item.image} alt="" aria-hidden loading={index === 0 ? "eager" : "lazy"} className="absolute inset-0 h-full w-full scale-110 object-cover opacity-50 blur-2xl" />
+          <div className="absolute inset-0 flex items-center justify-center px-5 pb-44 pt-28 lg:left-auto lg:w-[56%] lg:pb-36 lg:pl-0 lg:pr-16 lg:pt-32">
+            <img src={item.image} alt={item.alt} loading={index === 0 ? "eager" : "lazy"} className="max-h-full max-w-full rounded-2xl object-contain shadow-[0_30px_80px_rgba(20,4,8,.55)]" />
+          </div>
         </div>)}
       </div>
     </div>

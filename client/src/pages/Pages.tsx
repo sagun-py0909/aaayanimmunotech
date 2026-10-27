@@ -146,6 +146,16 @@ export function ProductDetail() {
       </div>
     </section>}
 
+    {product.videos?.length ? <section className="mt-24">
+      <div className="mb-8 border-b border-[#4E141D]/15 pb-5">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059]">Video</div>
+        <h2 className="mt-3 font-serif text-4xl">See the {product.name} in use.</h2>
+      </div>
+      <div className={`grid gap-6 ${product.videos.length > 1 ? "lg:grid-cols-2" : "max-w-[960px]"}`}>
+        {product.videos.map((video) => <video key={video.src} src={video.src} poster={video.poster} controls playsInline preload="none" className="aspect-video w-full rounded-[20px] bg-[#2E0A10] object-contain shadow-[0_16px_45px_rgba(46,10,16,0.12)]" />)}
+      </div>
+    </section> : null}
+
     <section className="mt-24">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-[#4E141D]/15 pb-5">
         <div>

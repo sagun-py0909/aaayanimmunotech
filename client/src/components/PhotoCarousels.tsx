@@ -59,10 +59,10 @@ export function HeroCarousel({ onExplore, onEnquire }: { onExplore: () => void; 
     <div ref={viewportRef} className="absolute inset-0 overflow-hidden">
       <div className="flex h-full">
         {heroSlides.map((item, index) => <div key={item.image} className={`relative h-full min-w-0 flex-[0_0_100%] overflow-hidden ${"flip" in item && item.flip ? "-scale-x-100" : ""}`} aria-roledescription="slide" aria-label={`${index + 1} of ${heroSlides.length}`}>
-          {/* None of these photos is large enough to fill the screen, so a blurred copy fills the background and the photo itself sits uncropped on the right at no more than its own size. */}
-          <img src={item.image} alt="" aria-hidden loading={index === 0 ? "eager" : "lazy"} className="absolute inset-0 h-full w-full scale-110 object-cover opacity-50 blur-2xl" />
-          <div className="absolute inset-0 flex items-center justify-center px-5 pb-44 pt-28 lg:left-auto lg:w-[56%] lg:pb-36 lg:pl-0 lg:pr-16 lg:pt-32">
-            <img src={item.image} alt={item.alt} loading={index === 0 ? "eager" : "lazy"} className="max-h-full max-w-full rounded-2xl object-contain shadow-[0_30px_80px_rgba(20,4,8,.55)]" />
+          {/* None of these photos is large enough to fill a desktop screen, so there a blurred copy fills the background and the photo itself sits uncropped on the right at no more than its own size. Phones show it full-bleed, where it stays sharp. */}
+          <img src={item.image} alt={item.alt} loading={index === 0 ? "eager" : "lazy"} className="absolute inset-0 h-full w-full object-cover lg:scale-110 lg:opacity-50 lg:blur-2xl" />
+          <div className="absolute inset-0 hidden items-center justify-center lg:left-auto lg:flex lg:w-[56%] lg:pb-36 lg:pl-0 lg:pr-16 lg:pt-32">
+            <img src={item.image} alt="" loading={index === 0 ? "eager" : "lazy"} className="max-h-full max-w-full rounded-2xl object-contain shadow-[0_30px_80px_rgba(20,4,8,.55)]" />
           </div>
         </div>)}
       </div>

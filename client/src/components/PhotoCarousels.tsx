@@ -9,9 +9,9 @@ const photo = (name: string) => `/images/photos/${name}.webp`;
 // Real equipment photography (1164–1600px) — large enough for a full-bleed hero.
 const heroSlides = [
   { image: photo("hbot-chamber-residence"), alt: "Hard shell hyperbaric oxygen chamber installed in a private residence", eyebrow: "Hyperbaric oxygen", title: "Hard shell HBOT chambers", href: "/equipment/hyperbaric-oxygen-chambers", flip: true },
-  { image: photo("red-light-panel"), alt: "Full body red light therapy panel in use", eyebrow: "Photobiomodulation", title: "Full body red light therapy", href: "/equipment/red-light-therapy" },
+  { image: photo("hbot-gold-ocean"), alt: "Gold luxury hyperbaric oxygen chamber in an ocean-view suite", eyebrow: "Luxury HBOT", title: "Signature gold hyperbaric chamber", href: "/products/hyperbaric-oxygen-hbot", position: "50% 60%" },
   { image: photo("hbot-multiplace-interior"), alt: "Seating inside a walk-in multiplace hyperbaric chamber", eyebrow: "Multiplace HBOT", title: "Walk-in chambers for group sessions", href: "/equipment/hyperbaric-oxygen-chambers" },
-  { image: photo("red-light-bed"), alt: "Commercial red light therapy bed with the canopy open", eyebrow: "Red light therapy beds", title: "Commercial PBM beds", href: "/equipment/red-light-therapy" },
+  { image: photo("float-pod-suite"), alt: "Sensory floatation pod with the lid open in a spa suite", eyebrow: "Floatation", title: "Sensory float pods", href: "/products/float-tanks-wet" },
 ];
 
 const gallery = [
@@ -58,7 +58,7 @@ export function HeroCarousel({ onExplore, onEnquire }: { onExplore: () => void; 
     <div ref={viewportRef} className="absolute inset-0 overflow-hidden">
       <div className="flex h-full">
         {heroSlides.map((item, index) => <div key={item.image} className={`relative h-full min-w-0 flex-[0_0_100%] overflow-hidden ${"flip" in item && item.flip ? "-scale-x-100" : ""}`} aria-roledescription="slide" aria-label={`${index + 1} of ${heroSlides.length}`}>
-          <img src={item.image} alt={item.alt} loading={index === 0 ? "eager" : "lazy"} className={`h-full w-full object-cover transition-transform duration-[7000ms] ease-out ${index === selected ? "scale-110" : "scale-100"}`} />
+          <img src={item.image} alt={item.alt} loading={index === 0 ? "eager" : "lazy"} style={"position" in item ? { objectPosition: item.position } : undefined} className={`h-full w-full object-cover transition-transform duration-[7000ms] ease-out ${index === selected ? "scale-110" : "scale-100"}`} />
         </div>)}
       </div>
     </div>

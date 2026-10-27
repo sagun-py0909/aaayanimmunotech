@@ -10,6 +10,7 @@ const photo = (name: string) => `/images/photos/${name}.webp`;
 const heroSlides = [
   { image: photo("hbot-gold-ocean"), alt: "Gold luxury hyperbaric oxygen chamber in an ocean-view suite", eyebrow: "Luxury HBOT", title: "Signature gold hyperbaric chamber", href: "/products/hyperbaric-oxygen-hbot" },
   { image: photo("hbot-multiplace-interior"), alt: "Seating inside a walk-in multiplace hyperbaric chamber", eyebrow: "Multiplace HBOT", title: "Walk-in chambers for group sessions", href: "/equipment/hyperbaric-oxygen-chambers" },
+  { image: photo("red-light-bed"), alt: "Red light therapy bed with the canopy open", eyebrow: "Red light therapy", title: "Red light therapy beds", href: "/products/red-light-pbm-therapy-beds" },
   { image: photo("cryo-whole-body-cabin"), alt: "Electric whole body cryotherapy cabin with blue lighting", eyebrow: "Whole body cryotherapy", title: "Electric whole body cryo cabins", href: "/products/whole-body-cryotherapy-chambers" },
   { image: photo("cryo-nitrogen-suite"), alt: "Nitrogen cryotherapy cabin opened by a therapist as a client waits", eyebrow: "Nitrogen cryotherapy", title: "Nitrogen cryo cabins", href: "/products/partial-body-cryo" },
   { image: photo("float-pod-suite"), alt: "Sensory floatation pod with the lid open in a spa suite", eyebrow: "Floatation", title: "Sensory float pods", href: "/products/float-tanks-wet" },
@@ -82,10 +83,13 @@ export function HeroCarousel({ onExplore, onEnquire }: { onExplore: () => void; 
       </div>
 
       <div className="pointer-events-auto flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-        <Link href={slide.href} className="group block max-w-[380px]" aria-live="polite">
-          <div className="text-[10px] uppercase tracking-[0.22em] text-[#C5A059]">{pad(selected)} / {pad(heroSlides.length - 1)} · {slide.eyebrow}</div>
-          <div className="mt-2 flex items-center gap-3 font-serif text-2xl leading-tight">{slide.title}<ArrowRight size={16} className="shrink-0 transition group-hover:translate-x-1" /></div>
-        </Link>
+        <div aria-live="polite">
+          <div className="text-[10px] uppercase tracking-[0.22em] text-[#C5A059] lg:text-xs">{pad(selected)} / {pad(heroSlides.length - 1)} · {slide.eyebrow}</div>
+          <Link href={slide.href} className="group mt-3 inline-flex max-w-full items-center gap-4 border border-white/30 bg-white/10 py-3 pl-5 pr-3 backdrop-blur-md transition hover:border-[#C5A059] hover:bg-white/15 max-sm:py-2.5 lg:gap-6 lg:py-4 lg:pl-7 lg:pr-4">
+            <span className="font-serif text-2xl leading-tight lg:text-[2.5rem]">{slide.title}</span>
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#C5A059] text-[#4E141D] transition group-hover:translate-x-1 lg:h-12 lg:w-12"><ArrowRight size={18} /></span>
+          </Link>
+        </div>
         <div className="flex items-center gap-4">
           <div className="hidden gap-2 md:flex">{heroSlides.map((item, index) => <button key={item.image} onClick={() => embla?.scrollTo(index)} aria-label={`Show ${item.title}`} aria-current={index === selected} className={`relative h-14 w-20 overflow-hidden border transition ${index === selected ? "border-[#C5A059] opacity-100" : "border-white/20 opacity-55 hover:opacity-90"}`}><img src={item.image} alt="" className="h-full w-full object-cover" /></button>)}</div>
           <div className="flex gap-2"><button onClick={() => embla?.scrollPrev()} className={arrowButton} aria-label="Previous slide"><ArrowLeft size={16} /></button><button onClick={() => embla?.scrollNext()} className={arrowButton} aria-label="Next slide"><ArrowRight size={16} /></button></div>

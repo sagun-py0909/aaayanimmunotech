@@ -1,11 +1,11 @@
 import { ArrowRight, Check, ChevronDown, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { Link, useRoute, useSearch } from "wouter";
+import { Link, Redirect, useRoute, useSearch } from "wouter";
 import { motion } from "framer-motion";
 import { PageShell, ProductCard, SiteFooter, SiteHeader, pad } from "@/components/SiteChrome";
 import { ProductBenefits } from "@/components/ProductBenefits";
-import { catalogue, categories, contact, guideLabels, sectors } from "@/data/site";
+import { catalogue, categories, contact, guideLabels, productAliases, sectors } from "@/data/site";
 import { enquiryFromForm, sendEnquiry } from "@/lib/enquiry";
 import NotFound from "./NotFound";
 
@@ -80,6 +80,8 @@ export function ProductDetail() {
   const [, params] = useRoute<{ id: string }>("/products/:id");
   const product = catalogue.find((item) => item.id === params?.id);
   const [activePhoto, setActivePhoto] = useState(0);
+  const alias = params?.id ? productAliases[params.id] : undefined;
+  if (alias) return <Redirect to={`/products/${alias}`} replace />;
   if (!product) return <NotFound />;
   const images = product.images?.length ? product.images : [product.image];
   const category = categories.find((item) => item.slug === product.categorySlug);

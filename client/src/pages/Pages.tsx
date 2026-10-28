@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Link, Redirect, useRoute, useSearch } from "wouter";
 import { motion } from "framer-motion";
 import { PageShell, ProductCard, SiteFooter, SiteHeader, pad } from "@/components/SiteChrome";
+import { ProductBenefits } from "@/components/ProductBenefits";
 import { catalogue, categories, contact, guideLabels, productAliases, sectors } from "@/data/site";
 import { enquiryFromForm, sendEnquiry } from "@/lib/enquiry";
 import NotFound from "./NotFound";
@@ -186,6 +187,8 @@ export function ProductDetail() {
         </Link>
       </div>
     </section>
+
+    {product.benefits && <ProductBenefits benefits={product.benefits} />}
 
     <div className="mt-24 grid gap-8 border-t border-[#4E141D]/15 pt-10 md:grid-cols-3">{[{ title: "Survey", body: "We confirm power, floor loading, access and ventilation before the order is placed." }, { title: "Commission", body: "Our own engineers install, test, calibrate and hand over the system." }, { title: "Support", body: "Operator training and a service contract keep it performing." }].map((item, index) => <div key={item.title}><div className="text-[10px] uppercase tracking-[0.18em] text-[#C5A059]">{pad(index)}</div><h2 className="mt-4 font-serif text-3xl">{item.title}</h2><p className="mt-3 text-sm leading-6 text-[#6f6a61]">{item.body}</p></div>)}</div>
 

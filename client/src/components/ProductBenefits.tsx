@@ -1,8 +1,8 @@
-import { Bandage, Bone, Check, CircleSlash, Dumbbell, Feather, Flame, HeartPulse, Moon, PersonStanding, Scale, ScanFace, ShieldCheck, Smile, Sparkles, type LucideIcon } from "lucide-react";
+import { Activity, Bandage, BatteryCharging, Bone, Brain, ChartLine, Check, CircleSlash, Droplets, Dumbbell, Feather, Flame, Focus, HeartPulse, Moon, Mountain, PersonStanding, Scale, ScanFace, ShieldCheck, ShieldPlus, Smile, Sparkles, Sun, Target, Thermometer, Timer, Waves, Wind, Zap, type LucideIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import type { Benefits } from "@/data/site";
 
-const icons: Record<string, LucideIcon> = { Bandage, Bone, Dumbbell, Flame, HeartPulse, Moon, PersonStanding, Scale, ScanFace, Smile, Sparkles };
+const icons: Record<string, LucideIcon> = { Activity, Bandage, BatteryCharging, Bone, Brain, ChartLine, Droplets, Dumbbell, Flame, Focus, HeartPulse, Moon, Mountain, PersonStanding, Scale, ScanFace, ShieldPlus, Smile, Sparkles, Sun, Target, Thermometer, Timer, Waves, Wind, Zap };
 const badgeIcons = [ShieldCheck, CircleSlash, Feather];
 
 const reveal = (index: number) => ({ initial: { opacity: 0, y: 18 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.3 }, transition: { duration: 0.5, delay: index * 0.05 } });
@@ -83,13 +83,21 @@ export function ProductBenefits({ benefits }: { benefits: Benefits }) {
 
       <motion.div {...reveal(0)} className="flex flex-col rounded-2xl bg-[#4E141D] p-6 text-white sm:p-8">
         <div className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059]">How it works</div>
-        <div className="mt-5 flex flex-1 items-center"><LightDiagram /></div>
-        <ol className="mt-6 grid grid-cols-3 gap-3 border-t border-white/15 pt-5">
-          {["Light reaches deep", "Cells absorb it", "Body recovers"].map((step, index) => <li key={step}>
-            <div className="text-[10px] tracking-[0.2em] text-[#C5A059]">0{index + 1}</div>
-            <div className="mt-1.5 text-[11px] uppercase leading-snug tracking-[0.1em] text-white/85">{step}</div>
-          </li>)}
-        </ol>
+        {benefits.diagram === "light" ? <>
+          <div className="mt-5 flex flex-1 items-center"><LightDiagram /></div>
+          <ol className="mt-6 grid grid-cols-3 gap-3 border-t border-white/15 pt-5">
+            {benefits.steps.map((step, index) => <li key={step}>
+              <div className="text-[10px] tracking-[0.2em] text-[#C5A059]">0{index + 1}</div>
+              <div className="mt-1.5 text-[11px] uppercase leading-snug tracking-[0.1em] text-white/85">{step}</div>
+            </li>)}
+          </ol>
+        </> : <ol className="mt-6 flex flex-1 flex-col justify-center divide-y divide-white/15">
+          {/* Without a diagram the steps fill the panel as a large numbered list. */}
+          {benefits.steps.map((step, index) => <motion.li key={step} {...reveal(index + 1)} className="flex items-center gap-5 py-5 sm:py-6">
+            <span className="font-serif text-5xl leading-none text-[#C5A059] sm:text-6xl">0{index + 1}</span>
+            <span className="text-xs uppercase leading-snug tracking-[0.14em] text-white/85 sm:text-sm">{step}</span>
+          </motion.li>)}
+        </ol>}
       </motion.div>
     </div>
 
